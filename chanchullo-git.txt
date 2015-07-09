@@ -1,0 +1,3 @@
+-configuracon github con proxy ERROR--Failed connect to github.com:443; No error while accessing https...
+	-->git config --global http.proxy <proxyname:port>
+	-->git config --global http.proxy 192.168.7.15:3128
