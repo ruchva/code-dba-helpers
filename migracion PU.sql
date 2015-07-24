@@ -1,3 +1,4 @@
+--CERTIFICADO_PMMPU NUP,Documento,IdBeneficio
 SELECT * FROM #temp_certif
 SELECT TOP(50)* FROM SENARITD.Persona.Persona p
 
@@ -30,12 +31,12 @@ ON p.NumeroDocumento = dbo.eliminaLetras(dbo.eliminapuntos(tc.CI))
 ALTER TABLE #temp_certif ADD Documento NVARCHAR
 ALTER TABLE #temp_certif ADD IdBeneficio INT
 /***********************************************************************************************************************/
---NUPTitular --NUPDH
+--CHEQUE NUPTitular,NUPDH,IdBanco,IdSector,Conciliado
 DROP TABLE #temp_cheque
 SELECT * 
 INTO #temp_cheque
 FROM PAGOS_P.dbo.chePU
-SELECT * FROM #temp_cheque WHERE marca IS NULL
+SELECT * FROM #temp_cheque --WHERE marca IS NULL
 SELECT TOP(50)* FROM SENARITD.Persona.Persona p
 ALTER TABLE #temp_cheque ADD NUPTitular BIGINT
 --ALTER TABLE #temp_cheque ADD NUPDH BIGINT
@@ -84,6 +85,128 @@ ON p.Matricula = tc.T_MATRICULA
 AND p.NumeroDocumento = dbo.eliminaLetras(dbo.eliminapuntos(tc.NUM_IDENTIF))
 ORDER BY p.Matricula
 SELECT COUNT(*) FROM #temp_cheque 
+
+--ID_BANCO
+SELECT * FROM SENARITD.Clasificador.DetalleClasificador WHERE IdTipoClasificador = '93'--ENTIDADES FINANCIERAS
+SELECT * FROM #temp_cheque
+
+/***********************************************************************************************************************/
+--DOCUMENTO COMPARATIVO NUP,IdSector,IdBeneficio
+DROP TABLE #temp_docom
+SELECT * 
+INTO #temp_docom
+FROM CC.dbo.DOC_COMPARATIVO dc
+SELECT * FROM #temp_docom
+SELECT * FROM SENARITD.Persona.Persona p
+
+ALTER TABLE #temp_docom ADD marca SMALLINT
+ALTER TABLE #temp_docom ADD NUP BIGINT
+
+UPDATE td SET marca = 1
+FROM #temp_docom td JOIN SENARITD.Persona.Persona p 
+ON p.Matricula = td.MATRICULA 
+
+UPDATE td SET marca = 2
+FROM #temp_docom td JOIN SENARITD.Persona.Persona p 
+ON p.Matricula = td.MATRICULA 
+AND p.NumeroDocumento = dbo.eliminaLetras(dbo.eliminapuntos(td.CI))
+
+UPDATE td SET marca = 3
+FROM #temp_docom td JOIN SENARITD.Persona.Persona p 
+ON p.Matricula = td.MATRICULA 
+AND p.NumeroDocumento = dbo.eliminaLetras(dbo.eliminapuntos(td.CI))
+AND p.CUA = td.NUA
+
+SELECT *
+FROM #temp_docom td JOIN SENARITD.Persona.Persona p 
+ON p.Matricula = td.MATRICULA 
+AND p.NumeroDocumento = dbo.eliminaLetras(dbo.eliminapuntos(td.CI))
+AND p.CUA = td.NUA
+
+/***********************************************************************************************************************/
+--PRE BENEFICIARIOS NUPTitular. NUPDH
+DROP TABLE #temp_preben
+SELECT * 
+INTO #temp_preben
+FROM PAGOS_P.dbo.Pre_Beneficiarios a
+SELECT * FROM #temp_preben
+SELECT TOP(1000)* FROM SENARITD.Persona.Persona p
+
+ALTER TABLE #temp_preben ADD marca SMALLINT
+ALTER TABLE #temp_preben ADD NUP BIGINT
+
+UPDATE a SET marca = 1
+FROM #temp_preben a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.T_MATRICULA
+
+UPDATE a SET marca = 2
+FROM #temp_preben a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.T_MATRICULA
+AND p.NumeroDocumento = a.NUM_IDENTIF 
+
+SELECT * 
+FROM #temp_preben a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.T_MATRICULA
+AND p.NumeroDocumento = a.NUM_IDENTIF 
+
+/***********************************************************************************************************************/
+--PRE TITULARES CUA, NUP, IdSector
+DROP TABLE #temp_pretit
+SELECT * 
+INTO #temp_pretit
+FROM PAGOS_P.dbo.Pre_Titulares a
+SELECT * FROM #temp_pretit
+SELECT TOP(1000)* FROM SENARITD.Persona.Persona p
+
+ALTER TABLE #temp_pretit ADD marca SMALLINT
+ALTER TABLE #temp_pretit ADD NUP BIGINT
+
+UPDATE a SET marca = 1
+FROM #temp_pretit a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.MATRICULA
+
+UPDATE a SET marca = 2
+FROM #temp_pretit a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.MATRICULA
+AND p.NumeroDocumento = a.NUM_IDENTIF
+
+SELECT * 
+FROM #temp_pretit a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.MATRICULA
+AND p.NumeroDocumento = a.NUM_IDENTIF
+
+/***********************************************************************************************************************/
+--TITULAR PU CUA, NUP, IdSector
+DROP TABLE #temp_tit
+SELECT * 
+INTO #temp_tit
+FROM PAGOS_P.dbo.Titular_PU a
+SELECT * FROM #temp_tit
+SELECT TOP(1000)* FROM SENARITD.Persona.Persona p
+
+ALTER TABLE #temp_tit ADD marca SMALLINT
+ALTER TABLE #temp_tit ADD NUP BIGINT
+ALTER TABLE #temp_tit ADD CUA BIGINT
+
+UPDATE a SET marca = 1
+FROM #temp_tit a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.T_MATRICULA
+
+UPDATE a SET marca = 2
+FROM #temp_tit a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.T_MATRICULA
+AND p.NumeroDocumento = NUM_IDENTIF
+
+SELECT *
+FROM #temp_tit a JOIN SENARITD.Persona.Persona p
+ON p.Matricula = a.T_MATRICULA
+AND p.NumeroDocumento = NUM_IDENTIF
+--ON p.CUA = a.NUA
+
+
+
+
+
 
 
 
