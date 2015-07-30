@@ -11,23 +11,6 @@ SELECT '' AS NUP
       ,tipo_cambio	 
 FROM CC.dbo.CERTIF_PMM_PU
 ;
-SELECT cp.COD
-      ,cp.ANIO
-      ,cp.MES
-      ,'' AS NUPTitular
-      ,cp.ESTADO
-      ,'' AS IdSector
-      ,'' AS NUPDH	
-      ,cp.DEBE
-      ,cp.HABER	
-      ,cp.NRO_CHEQUE
-      ,cp.NRO_BAN
-      ,'' AS IdBanco
-      ,cp.FECHA_EMI
-      ,cp.C31
-      ,'' AS Conciliado
-FROM PAGOS_P.dbo.chePU cp
-;
 SELECT dc.TRAMITE
       ,dc.COMPONENTE
       ,'' AS NUP
@@ -56,6 +39,23 @@ SELECT dc.TRAMITE
       ,dc.NRO_MINA
       ,dc.TRAB_SIM
 FROM CC.dbo.DOC_COMPARATIVO dc
+;
+SELECT cp.COD
+      ,cp.ANIO
+      ,cp.MES
+      ,'' AS NUPTitular
+      ,cp.ESTADO
+      ,'' AS IdSector
+      ,'' AS NUPDH	
+      ,cp.DEBE
+      ,cp.HABER	
+      ,cp.NRO_CHEQUE
+      ,cp.NRO_BAN
+      ,'' AS IdBanco
+      ,cp.FECHA_EMI
+      ,cp.C31
+      ,'' AS Conciliado
+FROM PAGOS_P.dbo.chePU cp
 ;
 SELECT pb.FORMULARIO
       ,'' AS NUPTitular
