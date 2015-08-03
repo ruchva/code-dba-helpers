@@ -6,13 +6,11 @@ SELECT * FROM #temp_certif
 SELECT TOP(50)* FROM SENARITD.Persona.Persona p
 SELECT TOP(1000)* FROM CRENTA.dbo.PERSONA p
 
-SELECT * FROM #temp_certif a LEFT JOIN CRENTA.dbo.PERSONA p --62 casos
-ON a.Matricula = p.Matricula
-WHERE p.Matricula IS NULL
-
-SELECT * FROM #temp_certif a LEFT JOIN CRENTA.dbo.TRAMITE t --64 casos
-ON a.Matricula = t.Matricula
-WHERE t.Matricula IS NULL
+SELECT * FROM #temp_certif a 
+LEFT JOIN CRENTA.dbo.TRAMITE t ON a.Tramite = t.Tramite 
+LEFT JOIN CRENTA.dbo.PERSONA p ON a.Matricula = p.Matricula 
+--WHERE t.Tramite IS NULL AND p.Matricula IS NULL AND t.ClaseRenta = 'U'--CC
+WHERE t.ClaseRenta = 'U'--CC
 
 --NUP--CERTIFICADO_PMMPU 
 ALTER TABLE #temp_certif ADD NUP BIGINT
@@ -70,8 +68,6 @@ ALTER TABLE #temp_certif ADD EstadoMig INT
 SELECT * FROM #temp_certif
 SELECT * FROM SENARITD.Clasificador.DetalleClasificador dc
 WHERE dc.IdTipoClasificador = 106
---como se cual tipo le corresponde?
-
  
 /***********************************************************************************************************************/
 --CHEQUE_PU 
@@ -81,13 +77,11 @@ FROM PAGOS_P.dbo.chePU
 SELECT * FROM #temp_cheque 
 SELECT TOP(50)* FROM SENARITD.Persona.Persona p
 
-SELECT * FROM #temp_cheque a LEFT JOIN CRENTA.dbo.PERSONA p --6 casos
-ON a.T_MATRICULA = p.Matricula
-WHERE p.Matricula IS NULL
-
-SELECT * FROM #temp_cheque a LEFT JOIN CRENTA.dbo.TRAMITE t --6 casos
-ON a.T_MATRICULA = t.Matricula
-WHERE t.Matricula IS NULL
+SELECT * FROM #temp_cheque a 
+LEFT JOIN CRENTA.dbo.TRAMITE t ON a.T_MATRICULA = t.Matricula 
+LEFT JOIN CRENTA.dbo.PERSONA p ON a.T_MATRICULA = p.Matricula 
+--WHERE t.Tramite IS NULL AND p.Matricula IS NULL AND t.ClaseRenta = 'U'--CC
+WHERE t.ClaseRenta = 'U'--CC
 
 --NUP TITULAR--CHEQUE_PU
 ALTER TABLE #temp_cheque ADD NUPTitular BIGINT
@@ -177,13 +171,11 @@ FROM CC.dbo.DOC_COMPARATIVO dc
 SELECT * FROM #temp_docom
 SELECT * FROM SENARITD.Persona.Persona p
 
-SELECT * FROM #temp_docom a LEFT JOIN CRENTA.dbo.PERSONA p --1105
-ON a.MATRICULA = p.Matricula
-WHERE p.Matricula IS NULL
-
-SELECT * FROM #temp_docom a LEFT JOIN CRENTA.dbo.TRAMITE t --1112
-ON a.MATRICULA = t.Matricula
-WHERE t.Matricula IS NULL
+SELECT * FROM #temp_docom a 
+LEFT JOIN CRENTA.dbo.TRAMITE t ON a.TRAMITE = t.Tramite 
+LEFT JOIN CRENTA.dbo.PERSONA p ON a.MATRICULA = p.Matricula 
+--WHERE t.Tramite IS NULL AND p.Matricula IS NULL AND t.ClaseRenta = 'U'--CC
+WHERE t.ClaseRenta = 'U'--CC
 
 --NUP--DOCUMENTO_COMPARATIVO 
 ALTER TABLE #temp_docom ADD NUP BIGINT
@@ -297,13 +289,11 @@ FROM PAGOS_P.dbo.Pre_Beneficiarios a
 SELECT * FROM #temp_preben
 SELECT TOP(1000)* FROM SENARITD.Persona.Persona p
 
-SELECT * FROM #temp_preben a LEFT JOIN CRENTA.dbo.PERSONA p --1
-ON a.T_MATRICULA = p.Matricula
-WHERE p.Matricula IS NULL
-
-SELECT * FROM #temp_preben a LEFT JOIN CRENTA.dbo.TRAMITE t --1
-ON a.T_MATRICULA = t.Matricula
-WHERE t.Matricula IS NULL
+SELECT * FROM #temp_preben a 
+LEFT JOIN CRENTA.dbo.TRAMITE t ON a.TRAMITE = t.Tramite 
+LEFT JOIN CRENTA.dbo.PERSONA p ON a.T_MATRICULA = p.Matricula 
+--WHERE t.Tramite IS NULL AND p.Matricula IS NULL AND t.ClaseRenta = 'U'--CC
+WHERE t.ClaseRenta = 'U'--CC
 
 --NUP--PRE BENEFICIARIOS
 ALTER TABLE #temp_preben ADD NUP BIGINT
@@ -401,6 +391,9 @@ ON a.ESTADO = dc.CodigoDetalleClasificador
 WHERE dc.IdTipoClasificador = 109
 
 --CALSE BENEFICIO--PRE BENEFICIARIOS
+ALTER TABLE #temp_preben ADD ClaseBeneficio INT
+SELECT * FROM PAGOS_P.dbo.param_clase_beneficio pcb
+
 SELECT COUNT(*), a.CLASE_BENEFICIO FROM #temp_preben a
 GROUP BY a.CLASE_BENEFICIO
 HAVING COUNT(*) > 1
@@ -411,14 +404,33 @@ SELECT * FROM SENARITD.Clasificador.DetalleClasificador dc
 WHERE dc.IdTipoClasificador = 110
 
 SELECT * FROM #temp_preben a JOIN SENARITD.Clasificador.DetalleClasificador dc
-ON a.ESTADO = dc.CodigoDetalleClasificador
+ON a.CLASE_BENEFICIO = dc.CodigoDetalleClasificador
 WHERE dc.IdTipoClasificador = 110
 
-UPDATE a SET a.Estado = dc.IdDetalleClasificador
+UPDATE a SET a.ClaseBeneficio = dc.IdDetalleClasificador
 FROM #temp_preben a JOIN SENARITD.Clasificador.DetalleClasificador dc
-ON a.ESTADO = dc.CodigoDetalleClasificador
+ON a.CLASE_BENEFICIO = dc.CodigoDetalleClasificador
 WHERE dc.IdTipoClasificador = 110
 
+--RED_DH --PRE BENEFICIARIOS
+ALTER TABLE #temp_preben ADD RedDH INT
+SELECT * FROM PAGOS_P.dbo.param_reduc_edad pre
+
+SELECT COUNT(*), a.RED_DH FROM #temp_preben a
+GROUP BY a.RED_DH
+HAVING COUNT(*) > 1 
+
+SELECT * FROM SENARITD.Clasificador.DetalleClasificador dc
+WHERE dc.IdTipoClasificador = 111
+
+SELECT * FROM #temp_preben a JOIN SENARITD.Clasificador.DetalleClasificador dc
+ON a.RED_DH = dc.CodigoDetalleClasificador
+WHERE dc.IdTipoClasificador = 111
+
+UPDATE a SET a.ClaseBeneficio = dc.IdDetalleClasificador
+FROM #temp_preben a JOIN SENARITD.Clasificador.DetalleClasificador dc
+ON a.RED_DH = dc.CodigoDetalleClasificador
+WHERE dc.IdTipoClasificador = 111
 
 /***********************************************************************************************************************/
 --PRE TITULARES 
@@ -428,13 +440,11 @@ FROM PAGOS_P.dbo.Pre_Titulares a
 SELECT * FROM #temp_pretit
 SELECT TOP(1000)* FROM SENARITD.Persona.Persona p
 
-SELECT * FROM #temp_pretit a LEFT JOIN CRENTA.dbo.PERSONA p --4
-ON a.MATRICULA = p.Matricula
-WHERE p.Matricula IS NULL
-
-SELECT * FROM #temp_pretit a LEFT JOIN CRENTA.dbo.TRAMITE t --5
-ON a.MATRICULA = t.Matricula
-WHERE t.Matricula IS NULL
+SELECT * FROM #temp_pretit a 
+LEFT JOIN CRENTA.dbo.TRAMITE t ON a.TRAMITE = t.Tramite 
+LEFT JOIN CRENTA.dbo.PERSONA p ON a.MATRICULA = p.Matricula 
+--WHERE t.Tramite IS NULL AND p.Matricula IS NULL AND t.ClaseRenta = 'U'--CC
+WHERE t.ClaseRenta = 'U'--CC
 
 --NUP--PRE TITULARES 
 ALTER TABLE #temp_pretit ADD NUP BIGINT
@@ -509,39 +519,110 @@ UPDATE a SET marca = 2
 FROM #temp_pretit a JOIN SENARITD.Persona.Persona p
 ON p.Matricula = a.MATRICULA
 AND p.NumeroDocumento = a.NUM_IDENTIF
-/***************************************************************/
-
 SELECT * 
 FROM #temp_pretit a JOIN SENARITD.Persona.Persona p
 ON p.Matricula = a.MATRICULA
 AND p.NumeroDocumento = a.NUM_IDENTIF
+/***************************************************************/
+
+--ESTADO--PRE TITULARES
+ALTER TABLE #temp_pretit ADD Estado INT
+SELECT * FROM PAGOS_P.dbo.param_estado;
+
+SELECT * FROM SENARITD.Clasificador.DetalleClasificador dc
+WHERE dc.IdTipoClasificador = 109
+
+SELECT * FROM #temp_pretit a JOIN SENARITD.Clasificador.DetalleClasificador dc
+ON a.ESTADO = dc.CodigoDetalleClasificador
+WHERE dc.IdTipoClasificador = 109
+
+UPDATE a SET a.Estado = dc.IdDetalleClasificador
+FROM #temp_pretit a JOIN SENARITD.Clasificador.DetalleClasificador dc
+ON a.ESTADO = dc.CodigoDetalleClasificador
+WHERE dc.IdTipoClasificador = 109
 
 /***********************************************************************************************************************/
---TITULAR PU CUA, NUP, IdSector
+--TITULAR_PU 
 DROP TABLE #temp_tit
 SELECT * INTO #temp_tit
 FROM PAGOS_P.dbo.Titular_PU a
 SELECT * FROM #temp_tit
 SELECT TOP(1000)* FROM SENARITD.Persona.Persona p
 
-ALTER TABLE #temp_tit ADD marca SMALLINT
+SELECT * FROM #temp_tit a 
+LEFT JOIN CRENTA.dbo.TRAMITE t ON a.TRAMITE = t.Tramite 
+LEFT JOIN CRENTA.dbo.PERSONA p ON a.T_MATRICULA = p.Matricula 
+--WHERE t.Tramite IS NULL AND p.Matricula IS NULL AND t.ClaseRenta = 'U'--CC
+WHERE t.ClaseRenta = 'U'--CC
+
+--NUP--TITULAR_PU
 ALTER TABLE #temp_tit ADD NUP BIGINT
-ALTER TABLE #temp_tit ADD CUA BIGINT
 
-UPDATE a SET marca = 1
-FROM #temp_tit a JOIN SENARITD.Persona.Persona p
-ON p.Matricula = a.T_MATRICULA
+SELECT * FROM #temp_tit a LEFT JOIN SENARITD.Persona.Persona p --529
+ON dbo.eliminaLetras(dbo.eliminapuntos(a.NUM_IDENTIF)) = p.NumeroDocumento
+WHERE p.NumeroDocumento IS NULL
 
-UPDATE a SET marca = 2
-FROM #temp_tit a JOIN SENARITD.Persona.Persona p
-ON p.Matricula = a.T_MATRICULA
-AND p.NumeroDocumento = NUM_IDENTIF
+SELECT * FROM #temp_tit a LEFT JOIN SENARITD.Persona.Persona p --52
+ON a.T_MATRICULA = p.Matricula
+WHERE p.Matricula IS NULL
 
-SELECT *
+SELECT * FROM #temp_tit a JOIN SENARITD.Persona.Persona p --5566
+ON a.T_MATRICULA = p.Matricula
+
+UPDATE a SET NUP = p.NUP
 FROM #temp_tit a JOIN SENARITD.Persona.Persona p
-ON p.Matricula = a.T_MATRICULA
-AND p.NumeroDocumento = NUM_IDENTIF
---ON p.CUA = a.NUA
+ON a.T_MATRICULA = p.Matricula
+
+--ID_TRAMITE--TITULAR_PU
+ALTER TABLE #temp_tit ADD IdTramite INT
+SELECT * FROM #temp_tit
+SELECT TOP(100)* FROM SENARITD.Tramite.TramitePersona tp
+
+SELECT * FROM #temp_tit a LEFT JOIN SENARITD.Tramite.TramitePersona tp --37
+ON a.NUP = tp.NUP
+WHERE tp.NUP IS NULL AND a.NUP IS NOT NULL
+
+SELECT * FROM #temp_tit a JOIN SENARITD.Tramite.TramitePersona tp --5511
+ON a.NUP = tp.NUP
+
+UPDATE a SET a.IdTramite = tp.IdTramite
+FROM #temp_tit a JOIN SENARITD.Tramite.TramitePersona tp 
+ON a.NUP = tp.NUP	
+
+--ID_GRUPO_BENEFICIO--TITULAR_PU
+ALTER TABLE #temp_tit ADD IdGrupoBeneficio INT
+SELECT * FROM #temp_tit
+SELECT TOP(100)* FROM SENARITD.Tramite.TramitePersona tp
+
+SELECT * FROM #temp_tit a LEFT JOIN SENARITD.Tramite.TramitePersona tp --37
+ON a.NUP = tp.NUP
+WHERE tp.NUP IS NULL AND a.NUP IS NOT NULL
+
+SELECT * FROM #temp_tit a JOIN SENARITD.Tramite.TramitePersona tp --5511
+ON a.NUP = tp.NUP
+
+UPDATE a SET a.IdGrupoBeneficio = tp.IdGrupoBeneficio
+FROM #temp_tit a JOIN SENARITD.Tramite.TramitePersona tp 
+ON a.NUP = tp.NUP	
+
+--ESTADO--TITULAR_PU
+ALTER TABLE #temp_tit ADD Estado INT
+SELECT * FROM #temp_tit
+SELECT * FROM PAGOS_P.dbo.param_estado;
+
+SELECT * FROM SENARITD.Clasificador.DetalleClasificador dc
+WHERE dc.IdTipoClasificador = 109
+
+SELECT * FROM #temp_tit a JOIN SENARITD.Clasificador.DetalleClasificador dc
+ON a.ESTADO = dc.CodigoDetalleClasificador
+WHERE dc.IdTipoClasificador = 109
+
+UPDATE a SET a.Estado = dc.IdDetalleClasificador
+FROM #temp_tit a JOIN SENARITD.Clasificador.DetalleClasificador dc
+ON a.ESTADO = dc.CodigoDetalleClasificador
+WHERE dc.IdTipoClasificador = 109
+
+
 
 
 
