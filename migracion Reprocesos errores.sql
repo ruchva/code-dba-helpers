@@ -36,6 +36,7 @@ SELECT TOP 100 r.IdTipoReproceso
 FROM SENARITD.Reprocesos.ReprocesoCC r
 ORDER BY r.NroFormularioRepro
 
+<<<<<<< HEAD
 ---------------------------------------------------
 SELECT * FROM CC.dbo.REPROCESO_CC rc
 
@@ -45,5 +46,7 @@ SELECT * FROM CC.dbo.REPROCESO_CC rc
 
 
 
+=======
+>>>>>>> 7e22bd85c37a98af879e88a6986b6088691319c9
 
 

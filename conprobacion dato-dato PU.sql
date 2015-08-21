@@ -72,7 +72,10 @@ SELECT * FROM Persona.Persona p WHERE p.NUP = 169672
 SELECT * FROM SENARITD.PagoU.ChequePU cp WHERE cp.NUPTitular = 169672
 SELECT * FROM dbo.Piv_ChequePU pcp WHERE pcp.NUPTitular = 169672
 SELECT * FROM PAGOS_P.dbo.chePU cp WHERE cp.T_MATRICULA = '591214HTJ'
+<<<<<<< HEAD
 SELECT * FROM CRENTA.dbo.PERSONA p WHERE p.Matricula = '591214HTJ'
+=======
+>>>>>>> 7e22bd85c37a98af879e88a6986b6088691319c9
 
 
 
