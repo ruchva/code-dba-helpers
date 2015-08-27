@@ -73,10 +73,10 @@ declare @o_sMensajeError varchar(1000)
 
 exec Seguridad.PR_Conexion
 @i_cOperacion		= 'I',
-@i_iIdUsuario		= 98,						-- Utilizar un usuario válido (preferentemente uno que se encuentre con el rol Administrador del Sistema)
-@i_sCuentaUsuario	= 'RMOJICA',				-- CuentaUsuario del tal usuario 
-@i_iIdRol			= 1,						-- Identificación del rol
-@i_iIdOficina		= 2,						-- Oficina en la que está registrado el usuario
+@i_iIdUsuario		= 98,		 -- Utilizar un usuario válido (preferentemente uno que se encuentre con el rol Administrador del Sistema)
+@i_sCuentaUsuario	= 'RMOJICA', -- CuentaUsuario del tal usuario 
+@i_iIdRol			= 1,		 -- Identificación del rol
+@i_iIdOficina		= 2,		 -- Oficina en la que está registrado el usuario
 @o_iIdConexion		= @o_iIdConexion output,	
 @o_sSSN				= null,
 @o_sMensajeError	= @o_sMensajeError output

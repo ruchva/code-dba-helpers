@@ -1,19 +1,4 @@
-/**************************************************************************
-* SISTEMA SENASIR - Workflow.PR_MigraWF
-***************************************************************************
-* AUTOR:       Ramiro Mojica
-* DESCRIPCION: Carga las tablas del módulo con las definiciones iniciales
-*			   requeridas para la migración
-* FECHA:       09/10/2014
-*
-***************************************************************************
-* HISTORIA DE MODIFICACIONES
-***************************************************************************
-* AUTOR:
-* JUSTIFICACION:
-* FECHA:
-***************************************************************************/
-
+/*  PR_MIGRAWF2  */
 if exists (select * from dbo.sysobjects 
 where id = object_id(N'PR_MigraWF2')
 and   objectproperty(id, N'IsProcedure') = 1)
@@ -21,7 +6,7 @@ and   objectproperty(id, N'IsProcedure') = 1)
 go
 
 create procedure PR_MigraWF2 as
-
+-- ingresa un tramite - cabecera del tramite
 insert into Workflow.SolicitudTramite select 
 IdSolicitud       = row_number() over(order by (select 1)),
 CodigoTramite     = convert(varchar(15), row_number() over(order by (select 1))),
@@ -40,7 +25,8 @@ Estado			  = 'I'
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
-
+-- detalle del tramite - detalle del tramite 
+-- en base a las 5 actividades creadas de TipoTramite = 'CC_CADQ'
 insert into Workflow.SolicitudTramiteConcepto (
 IdSolicitud,		Secuencia,			IdHisInstancia,
 IdTipoTramite,		IdConcepto,			TipoDato,
@@ -166,6 +152,7 @@ from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
 
+-- registra la ejecucion del tramite - cabecera de la instancia
 insert into Workflow.Instancia (
 IdInstancia,			IdHisInstancia,			IdTipoTramite,
 IdFlujo,				FechaHrInicio,			FechaHrFin,
@@ -196,6 +183,8 @@ from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
 
+-- registra los estados o nodos por donde pasa un tramite
+-- detalle de la instancia
 insert into Workflow.InstanciaNodo ( 
 IdInstancia,			Secuencia,					IdHisInstancia,
 IdTipoTramite,			IdSolicitud,				IdFlujo,
@@ -233,7 +222,7 @@ inner join Workflow.Instancia INSTANCIA on INSTANCIA.IdSolicitud = STCPTO.IdSoli
 where TipoTram = 'CC_CADQ'
 order by INSTANCIA.IdInstancia, MTF.FechaIngreso
 
-
+-- empieza un proceso de correccion
 declare 
 @w_iIdInstancia		bigint,
 @w_iIdInstanciaTmp	bigint,

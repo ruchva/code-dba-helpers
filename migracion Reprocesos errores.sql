@@ -11,7 +11,22 @@ WHERE r.IdTipoReproceso=31383
 * Verificar la correspondencia de NroCertificado con CertificadoCC
 *** IdUsuario??
 */
+--------------------------------------------
+SELECT * FROM CC.dbo.REPROCESO_CC rc WHERE rc.TIPO_REP NOT IN ('R','X')
+SELECT COUNT(*),rc.IdTipoReproceso FROM SENARITD.Reprocesos.ReprocesoCC rc
+GROUP BY rc.IdTipoReproceso HAVING COUNT(*) > 1
+/*
+* identificando casos que podrian no tener conflicto con la clave primaria
+* contabilizando datos migrados segun tipo de reproceso
+* */
+--DELETE FROM SENARITD.Reprocesos.ReprocesoCC WHERE IdTipoReproceso = 31383
 
+SELECT prc.USUARIO, (SELECT IdUsuario FROM Seguridad.Usuario WHERE CuentaUsuario = UPPER(dbo.eliminaSENASIR(prc.USUARIO))) 
+FROM dbo.Piv_REPROCESO_CC prc
+/*
+* obtencion de los ids de los usuarios 
+* */
+---------------------------------------------
 SELECT TOP 10 * FROM SENARITD.CertificacionCC.FormularioCalculoCC
 /*
 *para obtener el EstadoFormCalcCC y el SIP_impresion cruzamos con esta tabla en una etaa posterior - parche
