@@ -6,26 +6,33 @@ and   objectproperty(id, N'IsProcedure') = 1)
 go
 
 create procedure PR_MigraWF2 as
--- ingresa un tramite - cabecera del tramite
-insert into Workflow.SolicitudTramite select 
-IdSolicitud       = row_number() over(order by (select 1)),
-CodigoTramite     = convert(varchar(15), row_number() over(order by (select 1))),
-Descripcion       = isnull(MTEI.titular, 'Sin titular'),
-Comentarios       = null,
-IdHisInstancia    = 1 ,			
-IdTipoTramite     = 'CC_CADQ',
-IdRol		      = 177,				
-IdUsuario		  = MTEI.Usuario,
-FechaHoraRegistro = MTEI.fechareg,
-FechaHoraInicio   = MTEI.fechareg,	
-IdRolInicio		  = 177,			
-IdUsuarioInicio   = MTEI.Usuario,
-FechaHoraTermino  = null,	
-Estado			  = 'I'
+-- ingresa tramites - cabeceras 
+insert into Workflow.SolicitudTramite 
+select 
+	IdSolicitud       = row_number() over(order by (select 1)),
+	CodigoTramite     = convert(varchar(15), row_number() over(order by (select 1))),
+	Descripcion       = isnull(MTEI.titular, 'Sin titular'),
+	Comentarios       = null,
+	IdHisInstancia    = 1 ,			
+	IdTipoTramite     = 'CC_CADQ',
+	IdRol		      = 177,				
+	IdUsuario		  = MTEI.Usuario,
+	FechaHoraRegistro = MTEI.fechareg,
+	FechaHoraInicio   = MTEI.fechareg,	
+	IdRolInicio		  = 177,			
+	IdUsuarioInicio   = MTEI.Usuario,
+	FechaHoraTermino  = null,	
+	Estado			  = 'I'
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
-order by MTEI.TramiteTramP
--- detalle del tramite - detalle del tramite 
+order by MTEI.TramiteTramP 
+SELECT * FROM Workflow.SolicitudTramite st
+SELECT * FROM M_TRAMITES_ESTADOIN mte WHERE ISNULL(mte.flag, 0) NOT IN (1, 6, 5) AND TipoTram = 'CC_CADQ'
+SELECT a.* FROM   CRENTA..FUNC_TRAMITE a -- OBTIENE LA TABLA PIVOTE SOLO DE CC
+JOIN CRENTA..TRAMITE b ON  a.Matricula = b.Matricula AND a.Tramite = b.Tramite
+WHERE  b.ClaseRenta = 'U' --KFunTramiteCC 
+
+-- detalle de los tramites 
 -- en base a las 5 actividades creadas de TipoTramite = 'CC_CADQ'
 insert into Workflow.SolicitudTramiteConcepto (
 IdSolicitud,		Secuencia,			IdHisInstancia,
@@ -33,7 +40,8 @@ IdTipoTramite,		IdConcepto,			TipoDato,
 FlagInicio,			ValorInt,			ValorMoney,
 ValorFloat,			ValorChar,			ValorDate,
 ValorCatalog,		ValorBoolean
-) select 
+) 
+select 
 IdSolicitud			= row_number() over(order by (select 1)),
 Secuencia			= 1, 
 IdHisInstancia		= 1,
@@ -51,6 +59,7 @@ ValorBoolean		= null
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
+SELECT * FROM Workflow.SolicitudTramiteConcepto stc WHERE stc.Secuencia = 1
 
 insert into Workflow.SolicitudTramiteConcepto (
 IdSolicitud,		Secuencia,			IdHisInstancia,
@@ -58,7 +67,8 @@ IdTipoTramite,		IdConcepto,			TipoDato,
 FlagInicio,			ValorInt,			ValorMoney,
 ValorFloat,			ValorChar,			ValorDate,
 ValorCatalog,		ValorBoolean
-) select 
+) 
+select 
 IdSolicitud			= row_number() over(order by (select 1)),
 Secuencia			= 2, 
 IdHisInstancia		= 1,
@@ -76,6 +86,7 @@ ValorBoolean		= null
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
+SELECT * FROM Workflow.SolicitudTramiteConcepto stc WHERE stc.Secuencia = 2
 
 insert into Workflow.SolicitudTramiteConcepto (
 IdSolicitud,		Secuencia,			IdHisInstancia,
@@ -83,7 +94,8 @@ IdTipoTramite,		IdConcepto,			TipoDato,
 FlagInicio,			ValorInt,			ValorMoney,
 ValorFloat,			ValorChar,			ValorDate,
 ValorCatalog,		ValorBoolean
-) select 
+) 
+select 
 IdSolicitud			= row_number() over(order by (select 1)),
 Secuencia			= 3,
 IdHisInstancia		= 1,
@@ -101,6 +113,7 @@ ValorBoolean		= null
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
+SELECT * FROM Workflow.SolicitudTramiteConcepto stc WHERE stc.Secuencia = 3
 
 insert into Workflow.SolicitudTramiteConcepto (
 IdSolicitud,		Secuencia,			IdHisInstancia,
@@ -126,6 +139,7 @@ ValorBoolean		= null
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
+SELECT * FROM Workflow.SolicitudTramiteConcepto stc WHERE stc.Secuencia = 4
 
 insert into Workflow.SolicitudTramiteConcepto (
 IdSolicitud,		Secuencia,			IdHisInstancia,
@@ -151,6 +165,7 @@ ValorBoolean		= null
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP
+SELECT * FROM Workflow.SolicitudTramiteConcepto stc WHERE stc.Secuencia = 5
 
 -- registra la ejecucion del tramite - cabecera de la instancia
 insert into Workflow.Instancia (
