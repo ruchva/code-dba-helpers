@@ -77,7 +77,67 @@ SELECT * FROM CRENTA.dbo.PERSONA p WHERE p.Matricula = '591214HTJ'
 =======
 >>>>>>> 7e22bd85c37a98af879e88a6986b6088691319c9
 
+/*SELECT 'pruebas' AS origen,*
+FROM   (   SELECT *
+           FROM   pruebas.dbo.Clientes
+           EXCEPT
+		   SELECT *
+		   FROM   produccion.dbo.Clientes
+       ) AS IZQUIERDA
+UNION
+SELECT 'produccion' AS origen,*
+FROM   (   SELECT *
+           FROM   produccion.dbo.Clientes
+           EXCEPT
+           SELECT *
+           FROM   pruebas.dbo.Clientes
+       ) AS DERECHA
+       */           
+------------------------------------------------------------           
+--1 ORIGEN
+SELECT a.NUP,a.IdTramite,a.IdGrupoBeneficio,a.no_certif AS NumeroCertificado,a.doc AS Documento,a.fecha_emi AS FechaEmision,a.monto AS Monto,a.IdBeneficio,a.Tipo_PP AS TipoPP,a.EstadoM AS Estado
+	  ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,a.tipo_cambio AS TipoCambio  
+FROM Piv_CERTIFm_PMM_PU a
+WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL AND a.EstadoM IS NOT NULL
+ORDER BY a.NUP
+--2 DESTINO
+SELECT b.NUP,b.IdTramite,b.IdGrupoBeneficio,b.NumeroCertificado,b.Documento,b.FechaEmision,b.Monto,b.IdBeneficio,b.TipoPP,b.Estado,b.Version,b.TipoCambio
+FROM PagoU.CertificadoPMMPU b
+ORDER BY b.NUP
+--APLICANDO EXCEPT AL LA UNION
+SELECT 'Pivote' AS Origen,*
+FROM (  SELECT a.NUP,a.IdTramite,a.IdGrupoBeneficio,a.no_certif AS NumeroCertificado,a.doc AS Documento,a.fecha_emi AS FechaEmision,a.monto AS Monto,a.IdBeneficio,a.Tipo_PP AS TipoPP,a.EstadoM AS Estado
+	          ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,a.tipo_cambio AS TipoCambio  
+		FROM Piv_CERTIF_PMM_PU a
+		WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL	AND a.EstadoM IS NOT NULL
+		EXCEPT
+		SELECT b.NUP,b.IdTramite,b.IdGrupoBeneficio,b.NumeroCertificado,b.Documento,b.FechaEmision,b.Monto,b.IdBeneficio,b.TipoPP,b.Estado,b.Version,b.TipoCambio
+		FROM PagoU.CertificadoPMMPU b	
+	) AS IZQUIERDA
+UNION 
+SELECT 'Destino' AS Origen,*
+FROM (  SELECT b.NUP,b.IdTramite,b.IdGrupoBeneficio,b.NumeroCertificado,b.Documento,b.FechaEmision,b.Monto,b.IdBeneficio,b.TipoPP,b.Estado,b.Version,b.TipoCambio
+		FROM PagoU.CertificadoPMMPU b		
+		EXCEPT
+		SELECT a.NUP,a.IdTramite,a.IdGrupoBeneficio,a.no_certif AS NumeroCertificado,a.doc AS Documento,a.fecha_emi AS FechaEmision,a.monto AS Monto,a.IdBeneficio,a.Tipo_PP AS TipoPP,a.EstadoM AS Estado
+	          ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,a.tipo_cambio AS TipoCambio  
+		FROM Piv_CERTIF_PMM_PU a
+		WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL AND a.EstadoM IS NOT NULL
+	) AS DERECHA
+-------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+           
+           
+           
+            
 
 
 

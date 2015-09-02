@@ -1,6 +1,7 @@
 ALTER PROCEDURE dbo.MigraPagoUnico
 AS
 BEGIN
+	PRINT 'MIGRANDO EN TABLA PagoU.CertificadoPMMPU'	
 	INSERT INTO PagoU.CertificadoPMMPU
 	SELECT 
 		 pcpp.NUP --NUP
@@ -16,15 +17,21 @@ BEGIN
 		,NULL --HojaRuta
 		,NULL --FechaHojaRuta
 		,NULL --IdUsuarioHojaRuta
-		,1 --Version
+		,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version' --Version
         ,1 --RegistroActivo    
         ,pcpp.tipo_cambio --TipoCambio    
 	FROM dbo.Piv_CERTIF_PMM_PU pcpp
 	WHERE pcpp.NUP IS NOT NULL 
 	  AND pcpp.IdTramite IS NOT NULL
 	  AND pcpp.EstadoM IS NOT NULL
-	  AND pcpp.NUP NOT IN (SELECT cp.NUP FROM PagoU.CertificadoPMMPU cp)
+	  --AND pcpp.NUP NOT IN (SELECT cp.NUP FROM PagoU.CertificadoPMMPU cp)
 	
+	DECLARE @cCertificadoPMMPU INT 
+	SELECT @cCertificadoPMMPU = COUNT(*) FROM PagoU.CertificadoPMMPU
+	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cCertificadoPMMPU AS CHAR(5)) 
+	PRINT '------------------------------------------------------'
+	
+	PRINT 'MIGRANDO EN TABLA PagoU.DocumentoComparativo'
 	INSERT INTO PagoU.DocumentoComparativo
 	SELECT 
 		 pdc.IdTramite --IdTramite
@@ -46,24 +53,29 @@ BEGIN
 		,NULL --Descuento8porciento
 		,pdc.EstadoM --Estado
 		,pdc.MONTO_PU --MontoPU
-		,pdc.SECTOR --IdSector***
+		,pdc.IdSector --IdSector
 		,pdc.PRIMERA_FEC_AFILIA --PrimeraFechaAfiliacion
-		,pdc.ULTIMA_FEC_AFILIA --UultimaFechaAfiliacion
-		,pdc.DENSIDAD --Densidad
+		,pdc.DENSIDAD --Densidad		
 		,pdc.SALARIO_COTIZABLE --SalarioCotizable
 		,pdc.SALARIO_COTIZABLE_ACT --SalarioCotizableActual
 		,pdc.FECHA_CALCULO --FechaCalculo
 		,pdc.FECHA_EMISION --FechaEmision
 		,pdc.TIPO_CAMBIO --TipoCambio
-		,1 --Version
-        ,1 --RegistroActivo     
+		,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version' --Version
+        ,1 --RegistroActivo  
+        ,pdc.ULTIMA_FEC_AFILIA --UltimaFechaAfiliacion      
 	FROM dbo.Piv_DOC_COMPARATIVO pdc
 	WHERE pdc.NUP IS NOT NULL 
 	  AND pdc.IdTramite IS NOT NULL
 	  AND pdc.IdGrupoBeneficio IS NOT NULL	  
 	  AND pdc.EstadoM IS NOT NULL
-	  AND pdc.NUP NOT IN (SELECT dc.NUP FROM PagoU.DocumentoComparativo dc)
+	  --AND pdc.NUP NOT IN (SELECT dc.NUP FROM PagoU.DocumentoComparativo dc)
+	DECLARE @cDocumentoComparativo INT 
+	SELECT @cDocumentoComparativo = COUNT(*) FROM PagoU.DocumentoComparativo
+	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cDocumentoComparativo AS CHAR(5)) 
+	PRINT '------------------------------------------------------'	
 	
+	PRINT 'MIGRANDO EN TABLA PagoU.PreBeneficiarios'
 	INSERT INTO PagoU.PreBeneficiarios --DELETE FROM PagoU.PreBeneficiarios
 	SELECT 
 		 ppb.NUP --NUPTitular
@@ -76,14 +88,21 @@ BEGIN
 		,ppb.RED_DH --RedDH
 		,ppb.Parentesco --Parentesco
 		,ppb.Estado --Estado
-		,1 --Version
+		,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version' --Version
         ,1 --RegistroActivo
+        ,NULL --Resolucion
+        ,NULL --FechaResolucion
 	FROM dbo.Piv_PreBeneficiarios ppb
 	WHERE ppb.NUP IS NOT NULL 
 	  AND ppb.IdTramite IS NOT NULL
 	  AND ppb.IdGrupoBeneficio IS NOT NULL
-	  AND ppb.NUP NOT IN (SELECT pb.NUPTitular FROM PagoU.PreBeneficiarios pb)
+	  --AND ppb.NUP NOT IN (SELECT pb.NUPTitular FROM PagoU.PreBeneficiarios pb)
+	DECLARE @cPreBeneficiarios INT 
+	SELECT @cPreBeneficiarios = COUNT(*) FROM PagoU.PreBeneficiarios
+	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cPreBeneficiarios AS CHAR(5)) 
+	PRINT '------------------------------------------------------'	
 	
+	PRINT 'MIGRANDO EN TABLA PagoU.PreTitulares'
 	INSERT INTO PagoU.PreTitulares
 	SELECT 
 		 ppt.NUP --NUP
@@ -101,15 +120,22 @@ BEGIN
 		,ppt.RED_EDAD --RedEdad
 		,ppt.MESES_CNS --MesesCNS
 		,ppt.Estado --Estado
-		,1 --Version
+		,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version' --Version
         ,1 --RegistroActivo
+        ,NULL --Resolucion
+        ,NULL --FechaResolucion
 	FROM dbo.Piv_PreTitulares ppt
 	WHERE ppt.NUP IS NOT NULL 
 	  AND ppt.IdTramite IS NOT NULL
 	  AND ppt.IdGrupoBeneficio IS NOT NULL
 	  AND ppt.IdBeneficio IS NOT NULL
-	  AND ppt.NUP NOT IN (SELECT pt.NUP	FROM PagoU.PreTitulares pt)
+	  --AND ppt.NUP NOT IN (SELECT pt.NUP	FROM PagoU.PreTitulares pt)
+	DECLARE @cPreTitulares INT 
+	SELECT @cPreTitulares = COUNT(*) FROM PagoU.PreTitulares
+	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cPreTitulares AS CHAR(5)) 
+	PRINT '------------------------------------------------------'
 	
+	PRINT 'MIGRANDO EN TABLA PagoU.ChequePU'
 	INSERT INTO PagoU.ChequePU
 	SELECT 
 		 pcp.EstadoM --Estado
@@ -126,11 +152,18 @@ BEGIN
 		,pcp.FECHA_EMI --FechaEmision
 		,pcp.C31 --C31
 		,NULL --Conciliado
+		,ROW_NUMBER() OVER(PARTITION BY NUPTitular ORDER BY T_MATRICULA ASC)'Version'
+		,1 --RegistroActivo
 	FROM dbo.Piv_ChequePU pcp
 	WHERE pcp.NUPTitular IS NOT NULL 
 	  AND pcp.EstadoM IS NOT NULL
-	  AND pcp.NUPTitular NOT IN (SELECT cp.NUPTitular FROM PagoU.ChequePU cp)
+	  --AND pcp.NUPTitular NOT IN (SELECT cp.NUPTitular FROM PagoU.ChequePU cp)
+	DECLARE @cChequePU INT 
+	SELECT @cChequePU = COUNT(*) FROM PagoU.ChequePU
+	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cChequePU AS CHAR(5)) 
+	PRINT '------------------------------------------------------'
 	
+	PRINT 'MIGRANDO EN TABLA PagoU.TitularPU'
 	INSERT INTO PagoU.TitularPU
 	SELECT 
 		 ptp.NUP --NUP
@@ -142,9 +175,14 @@ BEGIN
 		,ptp.FECHA_ALTA --FechaAlta
 		,ptp.RESOLUCION --Resolucion
 		,ptp.Estado --Estado
+		,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version'
+		,1 --RegistroActivo
 	FROM dbo.Piv_TitularPU ptp
 	WHERE ptp.NUP IS NOT NULL 
 	  AND ptp.IdTramite IS NOT NULL
-	  AND ptp.NUP NOT IN (SELECT tp.NUP FROM PagoU.TitularPU tp)
-	
+	  --AND ptp.NUP NOT IN (SELECT tp.NUP FROM PagoU.TitularPU tp)
+	DECLARE @cTitularPU INT 
+	SELECT @cTitularPU = COUNT(*) FROM PagoU.TitularPU
+	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cTitularPU AS CHAR(5)) 
+	PRINT '------------------------------------------------------'
 END
