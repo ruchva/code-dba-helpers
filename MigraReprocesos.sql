@@ -1,4 +1,4 @@
-ALTER PROCEDURE dbo.MigraReprocesos
+ALTER PROCEDURE [dbo].[MigraReprocesos]
 AS
 BEGIN
 	INSERT INTO Reprocesos.ReprocesoCC

@@ -1,110 +1,15 @@
---*****EN ORIGEN Y NO EN DESTINO*****--
-
-SELECT * FROM SENARITD.dbo.Piv_CERTIF_PMM_PU a --NO en pivote
-WHERE NOT EXISTS (SELECT * FROM SENARITD.PagoU.CertificadoPMMPU cp WHERE cp.NUP = a.NUP)
-      AND a.NUP IS NOT NULL
-ORDER BY a.NUP
-
-SELECT * FROM SENARITD.dbo.Piv_DOC_COMPARATIVO a
-WHERE NOT EXISTS (SELECT * FROM SENARITD.PagoU.DocumentoComparativo dc WHERE dc.NUP = a.NUP)
-ORDER BY a.NUP
-------------------------------------
-SELECT * FROM SENARITD.dbo.Piv_ChequePU a
-WHERE NOT EXISTS (SELECT * FROM SENARITD.PagoU.ChequePU cp WHERE cp.NUPTitular = a.NUPTitular)
-ORDER BY a.NUPTitular
-
-SELECT * FROM SENARITD.dbo.Piv_PreBeneficiarios a
-WHERE NOT EXISTS (SELECT * FROM SENARITD.PagoU.PreBeneficiarios pb WHERE pb.NUPTitular = a.NUP)
-ORDER BY a.NUP
-
-SELECT * FROM SENARITD.dbo.Piv_PreTitulares a
-WHERE NOT EXISTS (SELECT * FROM SENARITD.PagoU.PreTitulares pt WHERE pt.NUP = a.NUP)
-ORDER BY a.NUP
-
-SELECT * FROM SENARITD.dbo.Piv_TitularPU a
-WHERE NOT EXISTS (SELECT * FROM SENARITD.PagoU.TitularPU tp WHERE tp.NUP = a.NUP)
-ORDER BY a.NUP
-
-----------------------------------------------
-
-SELECT * FROM Persona.Persona p WHERE p.NUP = 71322
-SELECT * FROM SENARITD.PagoU.CertificadoPMMPU cp WHERE cp.NUP = 71322 AND cp.IdTramite = 151802
-SELECT * FROM dbo.Piv_CERTIF_PMM_PU cp WHERE cp.NUP = 71322 AND cp.IdTramite = 151802
-SELECT * FROM CC.dbo.CERTIF_PMM_PU cpp WHERE cpp.Matricula = '540801CAM'
---
-SELECT * FROM Persona.Persona p WHERE p.NUP = 168795
-SELECT * FROM SENARITD.PagoU.DocumentoComparativo dc WHERE dc.NUP = 168795 AND dc.IdTramite = 117563
-SELECT * FROM dbo.Piv_DOC_COMPARATIVO pdc WHERE pdc.NUP = 168795 AND pdc.IdTramite = 117563
-SELECT * FROM CC.dbo.DOC_COMPARATIVO dc WHERE dc.MATRICULA = '541108FVV'
---
-SELECT * FROM Persona.Persona p WHERE p.NUP = 57807
-SELECT * FROM SENARITD.PagoU.PreBeneficiarios pb WHERE pb.NUPTitular = 57807 AND pb.IdTramite = 125377
-SELECT * FROM dbo.Piv_PreBeneficiarios ppb WHERE ppb.NUP = 57807 AND ppb.IdTramite = 125377
---SELECT * FROM dbo.Piv_PreBeneficiarios ppb WHERE ppb.NUPDH IS NOT NULL AND ppb.NUP IS NOT NULL AND ppb.IdTramite IS NOT NULL
-SELECT * FROM PAGOS_P.dbo.Pre_Beneficiarios pb WHERE pb.T_MATRICULA = '500906SHE'
---SELECT * FROM CRENTA.dbo.PERSONA p WHERE p.Matricula IN ('605814PAE','900415SPJ','955803SPC','990823SPA')
-/*
-SELECT * FROM Persona.Persona p WHERE p.NUP = 209152
-SELECT * FROM SENARITD.PagoU.PreBeneficiarios pb WHERE pb.NUPTitular = 209152 AND pb.IdTramite = 138768
-SELECT * FROM dbo.Piv_PreBeneficiarios ppb WHERE ppb.NUP = 209152 AND ppb.IdTramite = 138768
-SELECT * FROM PAGOS_P.dbo.Pre_Beneficiarios pb WHERE pb.T_MATRICULA = '320731VRN'
-*/
---
-SELECT * FROM Persona.Persona p WHERE p.NUP = 86629
-SELECT * FROM SENARITD.PagoU.PreTitulares pt WHERE pt.NUP = 86629
-SELECT * FROM dbo.Piv_PreTitulares ppt WHERE ppt.NUP = 86629
-SELECT * FROM PAGOS_P.dbo.Pre_Titulares pt WHERE pt.MATRICULA = '251226PCJ'
---
-SELECT * FROM SENARITD.PagoU.TitularPU tp --12
-LEFT JOIN SENARITD.PagoU.ChequePU cp ON tp.NUP = cp.NUPTitular
-WHERE cp.NUPTitular IS NULL
-SELECT * FROM SENARITD.PagoU.ChequePU cp --55
-LEFT JOIN SENARITD.PagoU.TitularPU tp ON tp.NUP = cp.NUPTitular
-WHERE tp.NUP IS NULL
-SELECT * FROM SENARITD.PagoU.TitularPU tp JOIN SENARITD.PagoU.ChequePU cp ON tp.NUP = cp.NUPTitular
---
-SELECT * FROM Persona.Persona p WHERE p.NUP = 169672
-SELECT * FROM SENARITD.PagoU.TitularPU tp WHERE tp.NUP = 169672
-SELECT * FROM dbo.Piv_TitularPU ptp WHERE ptp.NUP = 169672
-SELECT * FROM PAGOS_P.dbo.Titular_PU tp WHERE tp.T_MATRICULA = '591214HTJ'
---
-SELECT * FROM Persona.Persona p WHERE p.NUP = 169672
-SELECT * FROM SENARITD.PagoU.ChequePU cp WHERE cp.NUPTitular = 169672
-SELECT * FROM dbo.Piv_ChequePU pcp WHERE pcp.NUPTitular = 169672
-SELECT * FROM PAGOS_P.dbo.chePU cp WHERE cp.T_MATRICULA = '591214HTJ'
-<<<<<<< HEAD
-SELECT * FROM CRENTA.dbo.PERSONA p WHERE p.Matricula = '591214HTJ'
-=======
->>>>>>> 7e22bd85c37a98af879e88a6986b6088691319c9
-
-/*SELECT 'pruebas' AS origen,*
-FROM   (   SELECT *
-           FROM   pruebas.dbo.Clientes
-           EXCEPT
-		   SELECT *
-		   FROM   produccion.dbo.Clientes
-       ) AS IZQUIERDA
-UNION
-SELECT 'produccion' AS origen,*
-FROM   (   SELECT *
-           FROM   produccion.dbo.Clientes
-           EXCEPT
-           SELECT *
-           FROM   pruebas.dbo.Clientes
-       ) AS DERECHA
-       */           
-------------------------------------------------------------           
---1 ORIGEN
+--CERTIFICADOPMMPU
+--ORIGEN
 SELECT a.NUP,a.IdTramite,a.IdGrupoBeneficio,a.no_certif AS NumeroCertificado,a.doc AS Documento,a.fecha_emi AS FechaEmision,a.monto AS Monto,a.IdBeneficio,a.Tipo_PP AS TipoPP,a.EstadoM AS Estado
 	  ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,a.tipo_cambio AS TipoCambio  
-FROM Piv_CERTIFm_PMM_PU a
+FROM Piv_CERTIF_PMM_PU a
 WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL AND a.EstadoM IS NOT NULL
 ORDER BY a.NUP
---2 DESTINO
+--DESTINO
 SELECT b.NUP,b.IdTramite,b.IdGrupoBeneficio,b.NumeroCertificado,b.Documento,b.FechaEmision,b.Monto,b.IdBeneficio,b.TipoPP,b.Estado,b.Version,b.TipoCambio
 FROM PagoU.CertificadoPMMPU b
 ORDER BY b.NUP
---APLICANDO EXCEPT AL LA UNION
+--EXCEPT AL LA UNION
 SELECT 'Pivote' AS Origen,*
 FROM (  SELECT a.NUP,a.IdTramite,a.IdGrupoBeneficio,a.no_certif AS NumeroCertificado,a.doc AS Documento,a.fecha_emi AS FechaEmision,a.monto AS Monto,a.IdBeneficio,a.Tipo_PP AS TipoPP,a.EstadoM AS Estado
 	          ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,a.tipo_cambio AS TipoCambio  
@@ -125,19 +30,158 @@ FROM (  SELECT b.NUP,b.IdTramite,b.IdGrupoBeneficio,b.NumeroCertificado,b.Docume
 		WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL AND a.EstadoM IS NOT NULL
 	) AS DERECHA
 -------------------------------------------------------------
+--DOCUNENTOCOMPARATIVO
+--ORIGEN
+SELECT pdc.IdTramite,pdc.IdGrupoBeneficio,pdc.COMPONENTE AS Componente, pdc.NUP, pdc.MONTO_CC AS MontoCC,pdc.MONTO_PMM AS MontoPMM,pdc.APORTES_AFP AS AportesAFP,pdc.NRO_DOCUMENTO AS NumeroDocumento,
+pdc.IdBeneficio,pdc.FECHA_SELECCION AS FechaSeleccion,pdc.SALUD AS Salud,pdc.NRO_MESES AS NumeroMeses,pdc.INTERIOR_MINA AS InteriorMina,pdc.FECHA_PROCESO AS FechaProcesos,pdc.NRO_MINA AS NumeroMina,
+pdc.TRAB_SIM AS TrabajosSimultaneos, NULL AS Descuento8porciento,pdc.ESTADO AS Estado,pdc.MONTO_PU AS MontoPU,pdc.IdSector,pdc.PRIMERA_FEC_AFILIA AS PrimeraFechaAfiliacion,pdc.DENSIDAD AS Densidad,
+pdc.SALARIO_COTIZABLE AS SalarioCotizable,pdc.SALARIO_COTIZABLE_ACT AS SalarioCotizableActual,pdc.FECHA_CALCULO AS FechaCalculo,pdc.FECHA_EMISION AS FechaEmision,pdc.TIPO_CAMBIO AS TipoCambio,
+ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,pdc.ULTIMA_FEC_AFILIA AS UltimaFechaAfiliacion 
+FROM Piv_DOC_COMPARATIVO pdc
+WHERE pdc.NUP IS NOT NULL AND pdc.IdTramite IS NOT NULL
+--DESTINO
+SELECT * FROM PagoU.DocumentoComparativo dc
+--EXCEPT AL LA UNION
+SELECT 'Pivote' AS Origen,*
+FROM (  SELECT pdc.IdTramite,pdc.IdGrupoBeneficio,pdc.COMPONENTE AS Componente, pdc.NUP, pdc.MONTO_CC AS MontoCC,pdc.MONTO_PMM AS MontoPMM,pdc.APORTES_AFP AS AportesAFP,pdc.NRO_DOCUMENTO AS NumeroDocumento,
+		pdc.IdBeneficio,pdc.FECHA_SELECCION AS FechaSeleccion,pdc.SALUD AS Salud,pdc.NRO_MESES AS NumeroMeses,pdc.INTERIOR_MINA AS InteriorMina,pdc.FECHA_PROCESO AS FechaProcesos,pdc.NRO_MINA AS NumeroMina,
+		pdc.TRAB_SIM AS TrabajosSimultaneos, NULL AS Descuento8porciento,pdc.ESTADO AS Estado,pdc.MONTO_PU AS MontoPU,pdc.IdSector,pdc.PRIMERA_FEC_AFILIA AS PrimeraFechaAfiliacion,pdc.DENSIDAD AS Densidad,
+		pdc.SALARIO_COTIZABLE AS SalarioCotizable,pdc.SALARIO_COTIZABLE_ACT AS SalarioCotizableActual,pdc.FECHA_CALCULO AS FechaCalculo,pdc.FECHA_EMISION AS FechaEmision,pdc.TIPO_CAMBIO AS TipoCambio,
+		ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,pdc.ULTIMA_FEC_AFILIA AS UltimaFechaAfiliacion 
+		FROM Piv_DOC_COMPARATIVO pdc
+		WHERE pdc.NUP IS NOT NULL AND pdc.IdTramite IS NOT NULL
+		EXCEPT
+		SELECT * FROM PagoU.DocumentoComparativo dc	
+	) AS IZQUIERDA
+UNION 
+SELECT 'Destino' AS Origen,*
+FROM (  SELECT * FROM PagoU.DocumentoComparativo dc			
+		EXCEPT
+		SELECT pdc.IdTramite,pdc.IdGrupoBeneficio,pdc.COMPONENTE AS Componente, pdc.NUP, pdc.MONTO_CC AS MontoCC,pdc.MONTO_PMM AS MontoPMM,pdc.APORTES_AFP AS AportesAFP,pdc.NRO_DOCUMENTO AS NumeroDocumento,
+		pdc.IdBeneficio,pdc.FECHA_SELECCION AS FechaSeleccion,pdc.SALUD AS Salud,pdc.NRO_MESES AS NumeroMeses,pdc.INTERIOR_MINA AS InteriorMina,pdc.FECHA_PROCESO AS FechaProcesos,pdc.NRO_MINA AS NumeroMina,
+		pdc.TRAB_SIM AS TrabajosSimultaneos, NULL AS Descuento8porciento,pdc.ESTADO AS Estado,pdc.MONTO_PU AS MontoPU,pdc.IdSector,pdc.PRIMERA_FEC_AFILIA AS PrimeraFechaAfiliacion,pdc.DENSIDAD AS Densidad,
+		pdc.SALARIO_COTIZABLE AS SalarioCotizable,pdc.SALARIO_COTIZABLE_ACT AS SalarioCotizableActual,pdc.FECHA_CALCULO AS FechaCalculo,pdc.FECHA_EMISION AS FechaEmision,pdc.TIPO_CAMBIO AS TipoCambio,
+		ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,pdc.ULTIMA_FEC_AFILIA AS UltimaFechaAfiliacion 
+		FROM Piv_DOC_COMPARATIVO pdc
+		WHERE pdc.NUP IS NOT NULL AND pdc.IdTramite IS NOT NULL
+	) AS DERECHA
+-------------------------------------------------------------
+--PREBENEFICIARIOS
+--ORIGEN
+/*SELECT ppb.NUP AS NUPTitular,ppb.NUPDH,ppb.FORMULARIO AS Formulario,ppb.IdTramite,ppb.IdGrupoBeneficio,ppb.CLASE_BENEFICIO AS ClaseBeneficio,ppb.PORCENTAJE AS Porcentaje,ppb.RED_DH AS RedDH,
+ppb.PARENTESCO AS Parentesco,ppb.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL AS FechaResolucion
+FROM Piv_PreBeneficiarios ppb
+WHERE ppb.NUP IS NOT NULL AND ppb.IdTramite IS NOT NULL
+--DESTINO
+SELECT * FROM PagoU.PreBeneficiarios pb
+--EXCEPT AL LA UNION
+SELECT 'Pivote' AS Origen,*
+FROM (  SELECT ppb.NUP AS NUPTitular,ppb.NUPDH,ppb.FORMULARIO AS Formulario,ppb.IdTramite,ppb.IdGrupoBeneficio,ppb.CLASE_BENEFICIO AS ClaseBeneficio,ppb.PORCENTAJE AS Porcentaje,ppb.RED_DH AS RedDH,
+		ppb.PARENTESCO AS Parentesco,ppb.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL AS FechaResolucion
+		FROM Piv_PreBeneficiarios ppb
+		WHERE ppb.NUP IS NOT NULL AND ppb.IdTramite IS NOT NULL
+		EXCEPT
+		SELECT * FROM PagoU.PreBeneficiarios pb
+	) AS IZQUIERDA
+UNION 
+SELECT 'Destino' AS Origen,*
+FROM (  SELECT * FROM PagoU.PreBeneficiarios pb		
+		EXCEPT
+		SELECT ppb.NUP AS NUPTitular,ppb.NUPDH,ppb.FORMULARIO AS Formulario,ppb.IdTramite,ppb.IdGrupoBeneficio,ppb.CLASE_BENEFICIO AS ClaseBeneficio,ppb.PORCENTAJE AS Porcentaje,ppb.RED_DH AS RedDH,
+		ppb.PARENTESCO AS Parentesco,ppb.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL AS FechaResolucion
+		FROM Piv_PreBeneficiarios ppb
+		WHERE ppb.NUP IS NOT NULL AND ppb.IdTramite IS NOT NULL
+	) AS DERECHA*/
+-------------------------------------------------------------
+--PRETITULARES
+--ORIGEN
+SELECT ppt.NUP,ppt.FORMULARIO AS Formulario,ppt.IdTramite,ppt.IdGrupoBeneficio,ppt.NUM_CERTIF AS NumeroCertificado,ppt.IdBeneficio,ppt.ANIOS_INSALUBRES AS AniosInsalubres,ppt.MONTO_BASE AS MontoBase,
+ppt.REINTEGRO_DESDE AS ReintegroDesde,ppt.REINTEGRO_HASTA AS ReintegroHasta,ppt.REINTEGRO AS Reintegro,ppt.AGUINALDO AS Aguinaldo,ppt.RED_EDAD AS RedEdad,ppt.MESES_CNS AS MesesCNS,ppt.Estado,
+ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL FechaResolucion
+FROM Piv_PreTitulares ppt
+WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
+--DESTINO
+SELECT * FROM PagoU.PreTitulares pt
+--EXCEPT AL LA UNION
+SELECT 'Pivote' AS Origen,*
+FROM (  SELECT ppt.NUP,ppt.FORMULARIO AS Formulario,ppt.IdTramite,ppt.IdGrupoBeneficio,ppt.NUM_CERTIF AS NumeroCertificado,ppt.IdBeneficio,ppt.ANIOS_INSALUBRES AS AniosInsalubres,ppt.MONTO_BASE AS MontoBase,
+		ppt.REINTEGRO_DESDE AS ReintegroDesde,ppt.REINTEGRO_HASTA AS ReintegroHasta,ppt.REINTEGRO AS Reintegro,ppt.AGUINALDO AS Aguinaldo,ppt.RED_EDAD AS RedEdad,ppt.MESES_CNS AS MesesCNS,ppt.Estado,
+		ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL FechaResolucion
+		FROM Piv_PreTitulares ppt
+		WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
+		EXCEPT
+		SELECT * FROM PagoU.PreTitulares pt
+	) AS IZQUIERDA
+UNION 
+SELECT 'Destino' AS Origen,*
+FROM (  SELECT * FROM PagoU.PreTitulares pt		
+		EXCEPT
+		SELECT ppt.NUP,ppt.FORMULARIO AS Formulario,ppt.IdTramite,ppt.IdGrupoBeneficio,ppt.NUM_CERTIF AS NumeroCertificado,ppt.IdBeneficio,ppt.ANIOS_INSALUBRES AS AniosInsalubres,ppt.MONTO_BASE AS MontoBase,
+		ppt.REINTEGRO_DESDE AS ReintegroDesde,ppt.REINTEGRO_HASTA AS ReintegroHasta,ppt.REINTEGRO AS Reintegro,ppt.AGUINALDO AS Aguinaldo,ppt.RED_EDAD AS RedEdad,ppt.MESES_CNS AS MesesCNS,ppt.Estado,
+		ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL FechaResolucion
+		FROM Piv_PreTitulares ppt
+		WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
+	) AS DERECHA
+-------------------------------------------------------------
+--CHEQUEPU
+--ORIGEN
+SELECT pcp.EstadoM,pcp.NUPTitular,pcp.NUPDH,pcp.COD AS Codigo,pcp.ANIO AS Anio,pcp.MES AS Mes,pcp.DEBE AS Debe,pcp.HABER AS Haber,pcp.NRO_CHEQUE AS NumeroCheque,pcp.NRO_BAN AS NumeroBanco,pcp.IdBanco,
+pcp.FECHA_EMI AS FechaEmision,pcp.C31,NULL AS Conciliado,ROW_NUMBER() OVER(PARTITION BY NUPTitular ORDER BY T_MATRICULA ASC) AS Version,1 AS RegistroActivo
+FROM Piv_ChequePU pcp
+WHERE pcp.NUPTitular IS NOT NULL
+--DESTINO
+SELECT * FROM PagoU.ChequePU cp
+--EXCEPT AL LA UNION
+SELECT 'Pivote' AS Origen,*
+FROM (  SELECT ppt.NUP,ppt.FORMULARIO AS Formulario,ppt.IdTramite,ppt.IdGrupoBeneficio,ppt.NUM_CERTIF AS NumeroCertificado,ppt.IdBeneficio,ppt.ANIOS_INSALUBRES AS AniosInsalubres,ppt.MONTO_BASE AS MontoBase,
+		ppt.REINTEGRO_DESDE AS ReintegroDesde,ppt.REINTEGRO_HASTA AS ReintegroHasta,ppt.REINTEGRO AS Reintegro,ppt.AGUINALDO AS Aguinaldo,ppt.RED_EDAD AS RedEdad,ppt.MESES_CNS AS MesesCNS,ppt.Estado,
+		ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL FechaResolucion
+		FROM Piv_PreTitulares ppt
+		WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
+		EXCEPT
+		SELECT * FROM PagoU.PreTitulares pt
+	) AS IZQUIERDA
+UNION 
+SELECT 'Destino' AS Origen,*
+FROM (  SELECT * FROM PagoU.PreTitulares pt		
+		EXCEPT
+		SELECT ppt.NUP,ppt.FORMULARIO AS Formulario,ppt.IdTramite,ppt.IdGrupoBeneficio,ppt.NUM_CERTIF AS NumeroCertificado,ppt.IdBeneficio,ppt.ANIOS_INSALUBRES AS AniosInsalubres,ppt.MONTO_BASE AS MontoBase,
+		ppt.REINTEGRO_DESDE AS ReintegroDesde,ppt.REINTEGRO_HASTA AS ReintegroHasta,ppt.REINTEGRO AS Reintegro,ppt.AGUINALDO AS Aguinaldo,ppt.RED_EDAD AS RedEdad,ppt.MESES_CNS AS MesesCNS,ppt.Estado,
+		ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL FechaResolucion
+		FROM Piv_PreTitulares ppt
+		WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
+	) AS DERECHA
+-------------------------------------------------------------
+--TITULARPU
+--ORIGEN
+SELECT ptp.NUP,ptp.IdTramite,ptp.IdGrupoBeneficio,ptp.NUM_CERTIF AS NumeroCertificado,ptp.FORMULARIO AS Formulario,ptp.ANIOS_INSALUBRES AS AniosInsalubres,ptp.FECHA_ALTA AS FechaAlta,ptp.RESOLUCION AS Resolucion,
+ptp.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo
+FROM Piv_TitularPU ptp
+WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL
+--DESTINO
+SELECT * FROM PagoU.TitularPU tp
+--EXCEPT AL LA UNION
+SELECT 'Pivote' AS Origen,*
+FROM (  SELECT ptp.NUP,ptp.IdTramite,ptp.IdGrupoBeneficio,ptp.NUM_CERTIF AS NumeroCertificado,ptp.FORMULARIO AS Formulario,ptp.ANIOS_INSALUBRES AS AniosInsalubres,ptp.FECHA_ALTA AS FechaAlta,ptp.RESOLUCION AS Resolucion,
+		ptp.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo
+		FROM Piv_TitularPU ptp
+		WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL
+		EXCEPT
+		SELECT * FROM PagoU.TitularPU tp
+	) AS IZQUIERDA
+UNION 
+SELECT 'Destino' AS Origen,*
+FROM (  SELECT * FROM PagoU.TitularPU tp	
+		EXCEPT
+		SELECT ptp.NUP,ptp.IdTramite,ptp.IdGrupoBeneficio,ptp.NUM_CERTIF AS NumeroCertificado,ptp.FORMULARIO AS Formulario,ptp.ANIOS_INSALUBRES AS AniosInsalubres,ptp.FECHA_ALTA AS FechaAlta,ptp.RESOLUCION AS Resolucion,
+		ptp.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo
+		FROM Piv_TitularPU ptp
+		WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL
+	) AS DERECHA
 
 
 
 
-
-
-
-
-
-           
-           
-           
-            
 
 
 

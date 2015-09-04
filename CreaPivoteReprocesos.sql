@@ -1,4 +1,4 @@
-ALTER PROCEDURE dbo.CreaPivoteReprocesos
+ALTER PROCEDURE [dbo].[CreaPivoteReprocesos]
 AS
 BEGIN
 	DROP TABLE SENARITD.dbo.Piv_REPROCESO_CC
@@ -17,29 +17,34 @@ BEGIN
 	ALTER TABLE SENARITD.dbo.Piv_REPROCESO_CC ADD MontoCC DECIMAL 
 	ALTER TABLE SENARITD.dbo.Piv_REPROCESO_CC ADD SIP_impresion INT 
 	
+	--NUP
 	UPDATE a SET NUP = tp.NUP, IdTramite = tp.IdTramite, IdGrupoBeneficio = tp.IdGrupoBeneficio, IdTipoTramite = tp.IdTipoTramite
 	FROM SENARITD.dbo.Piv_REPROCESO_CC a JOIN SENARITD.Tramite.TramitePersona tp 
 	ON a.TRAMITE = tp.NumeroTramiteCrenta
 
+	--NoFormularioCalculo
 	UPDATE a SET NoFormularioCalculo = fcc.NoFormularioCalculo, IdTipoFormularioCalculo = fcc.IdTipoFormularioCalculo
 	FROM SENARITD.dbo.Piv_REPROCESO_CC a JOIN SENARITD.CertificacionCC.FormularioCalculoCC fcc 
 	ON fcc.IdTramite = dbo.eliminaLetras(a.TRAMITE)
 	
 	--UPDATE EstadoFormCalcCC
 	
+	--MontoCC
 	UPDATE a SET MontoCC = fcc.MontoCC
 	FROM SENARITD.dbo.Piv_REPROCESO_CC a JOIN SENARITD.CertificacionCC.FormularioCalculoCC fcc 
 	ON fcc.IdTramite = dbo.eliminaLetras(a.TRAMITE)
 	
 	--UPDATE SIP_impresion
 	
+	--IdTipoBeneficio
 	UPDATE a SET a.IdTipoBeneficio = CASE WHEN a.BENEFICIO = 'PU' THEN 21
 										  WHEN a.BENEFICIO = 'PMM' THEN 19
 										  WHEN a.BENEFICIO = 'CC' AND a.TIPO_CC = 'M' THEN 16
 										  WHEN a.BENEFICIO = 'CC' AND a.TIPO_CC = 'G' THEN 17
 									 END
 	FROM SENARITD.dbo.Piv_REPROCESO_CC a
-			
+	
+	--NroFormularioRepro		
 	DROP TABLE SENARITD.dbo.Piv_REPROCESO_CC_rows
 	SELECT (SELECT MAX(NroFormularioRepro) FROM SENARITD.Reprocesos.ReprocesoCC) + ROW_NUMBER() OVER (ORDER BY TRAMITE DESC) AS rownumber, *
 	INTO SENARITD.dbo.Piv_REPROCESO_CC_rows

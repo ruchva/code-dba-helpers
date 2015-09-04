@@ -1,4 +1,4 @@
-ALTER PROCEDURE dbo.MigraPagoUnico
+ALTER PROCEDURE [dbo].[MigraPagoUnico]
 AS
 BEGIN
 	PRINT 'MIGRANDO EN TABLA PagoU.CertificadoPMMPU'	
