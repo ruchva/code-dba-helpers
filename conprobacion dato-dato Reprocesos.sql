@@ -1,17 +1,14 @@
---*****EN ORIGEN Y NO EN DESTINO*****--
-
+--EJEMPLOS
 SELECT * FROM SENARITD.dbo.Piv_REPROCESO_CC a
 WHERE NOT EXISTS (SELECT * FROM SENARITD.Reprocesos.ReprocesoCC rc WHERE rc.NUP = a.NUP)
 ORDER BY a.NUP
-
----------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
 SELECT * FROM Persona.Persona p WHERE p.NUP = 57374
 SELECT * FROM SENARITD.Reprocesos.ReprocesoCC rc WHERE rc.NroFormularioRepro = 1200
 SELECT * FROM dbo.Piv_REPROCESO_CC_rows prcr WHERE prcr.rownumber = 1200
 SELECT * FROM CC.dbo.REPROCESO_CC rc WHERE rc.NRO_FORM = 4005
-
----------------------------------------
-
+-----------------------------------------------------------------------------------------------------------------------------------------------
+--CONTROL MEDIANTE EXCEPT
 --ORIGEN
 SELECT prcr.rownumber AS NroFormularioRepro,CASE WHEN TIPO_REP='O' THEN '31388'
 												 WHEN TIPO_REP='C' THEN '31383'
@@ -30,7 +27,8 @@ prcr.MONTO_CC_I AS MontoActualizadoCCI,prcr.MONTO_PU_I AS MontoActualizadoPUI, p
 1 AS IdEstadoReproceso,1 AS RegistroActivo, (SELECT IdUsuario
 											 FROM   Seguridad.Usuario
 											 WHERE  CuentaUsuario = UPPER(dbo.eliminaSENASIR(USUARIO))) AS IdUsuario
-FROM Piv_REPROCESO_CC_rows prcr WHERE prcr.IdTramite IS NOT NULL AND prcr.IdTipoTramite IS NOT NULL
+FROM Piv_REPROCESO_CC_rows prcr 
+WHERE prcr.IdTramite IS NOT NULL AND prcr.IdTipoTramite IS NOT NULL
 --DESTINO
 SELECT rc.NroFormularioRepro, rc.IdTipoReproceso, rc.IdTipoBeneficio,rc.NumeroResolucion,
        rc.FechaResolucion, rc.FechaInicioRepro, rc.NUP, rc.IdTramite,
@@ -40,6 +38,7 @@ SELECT rc.NroFormularioRepro, rc.IdTipoReproceso, rc.IdTipoBeneficio,rc.NumeroRe
        rc.MontoActualizadoCCII, rc.MontoActualizadoPUII, rc.IdEstadoReproceso,
        rc.RegistroActivo, rc.IdUsuario
 FROM Reprocesos.ReprocesoCC rc
+WHERE IdTipoReproceso <> 31389
 
 --EXCEPT AL LA UNION
 SELECT 'Pivote' AS Origen,*
@@ -60,7 +59,8 @@ FROM (  SELECT prcr.rownumber AS NroFormularioRepro,CASE WHEN TIPO_REP='O' THEN 
 		1 AS IdEstadoReproceso,1 AS RegistroActivo, (SELECT IdUsuario
 													 FROM   Seguridad.Usuario
 													 WHERE  CuentaUsuario = UPPER(dbo.eliminaSENASIR(USUARIO))) AS IdUsuario
-		FROM Piv_REPROCESO_CC_rows prcr WHERE prcr.IdTramite IS NOT NULL AND prcr.IdTipoTramite IS NOT NULL
+		FROM Piv_REPROCESO_CC_rows prcr 
+		WHERE prcr.IdTramite IS NOT NULL AND prcr.IdTipoTramite IS NOT NULL
 		EXCEPT
 		SELECT rc.NroFormularioRepro, rc.IdTipoReproceso, rc.IdTipoBeneficio,rc.NumeroResolucion,
 			   rc.FechaResolucion, rc.FechaInicioRepro, rc.NUP, rc.IdTramite,
@@ -70,6 +70,7 @@ FROM (  SELECT prcr.rownumber AS NroFormularioRepro,CASE WHEN TIPO_REP='O' THEN 
 			   rc.MontoActualizadoCCII, rc.MontoActualizadoPUII, rc.IdEstadoReproceso,
 			   rc.RegistroActivo, rc.IdUsuario
 		FROM Reprocesos.ReprocesoCC rc
+		WHERE IdTipoReproceso <> 31389
 	) AS IZQUIERDA
 UNION 
 SELECT 'Destino' AS Origen,*
@@ -81,6 +82,7 @@ FROM (  SELECT rc.NroFormularioRepro, rc.IdTipoReproceso, rc.IdTipoBeneficio,rc.
 			   rc.MontoActualizadoCCII, rc.MontoActualizadoPUII, rc.IdEstadoReproceso,
 			   rc.RegistroActivo, rc.IdUsuario
 		FROM Reprocesos.ReprocesoCC rc
+		WHERE IdTipoReproceso <> 31389
 		EXCEPT
 		SELECT prcr.rownumber AS NroFormularioRepro,CASE WHEN TIPO_REP='O' THEN '31388'
 														 WHEN TIPO_REP='C' THEN '31383'
@@ -99,9 +101,10 @@ FROM (  SELECT rc.NroFormularioRepro, rc.IdTipoReproceso, rc.IdTipoBeneficio,rc.
 		1 AS IdEstadoReproceso,1 AS RegistroActivo, (SELECT IdUsuario
 													 FROM   Seguridad.Usuario
 													 WHERE  CuentaUsuario = UPPER(dbo.eliminaSENASIR(USUARIO))) AS IdUsuario
-		FROM Piv_REPROCESO_CC_rows prcr WHERE prcr.IdTramite IS NOT NULL AND prcr.IdTipoTramite IS NOT NULL
+		FROM Piv_REPROCESO_CC_rows prcr 
+		WHERE prcr.IdTramite IS NOT NULL AND prcr.IdTipoTramite IS NOT NULL
 	) AS DERECHA
-
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 

@@ -79,7 +79,7 @@ BEGIN
 	INSERT INTO PagoU.PreBeneficiarios --DELETE FROM PagoU.PreBeneficiarios
 	SELECT 
 		 ppb.NUP --NUPTitular
-		,ppb.NUPDH --NUPDH
+		,ppb.NUPDH --NUPDH ---***PARA LOS FALTANTES SE DEBE CREAR UN NUP EN Persona.Persona
 		,ppb.FORMULARIO --Formulario
 		,ppb.IdTramite --IdTramite
 		,ppb.IdGrupoBeneficio --IdGrupoBeneficio

@@ -31,11 +31,22 @@ SELECT TOP 10 * FROM SENARITD.CertificacionCC.FormularioCalculoCC
 /*
 *para obtener el EstadoFormCalcCC y el SIP_impresion cruzamos con esta tabla en una etaa posterior - parche
 */
+---------------------------------------------
+--COMPROBAR SI NroCertificado CORRESPONDE
+select r.NroCertificado from Reprocesos.ReprocesoCC r
+select c.NroCertificado from EmisionCC.CertificadoCC c
 
+select r.NroCertificado,c.NroCertificado 
+from Reprocesos.ReprocesoCC r
+join EmisionCC.CertificadoCC c on r.NroCertificado = c.NroCertificado  
+
+---------------------------------------------
 SELECT COUNT(*),rc.IdTipoReproceso FROM Reprocesos.ReprocesoCC rc
 GROUP BY rc.IdTipoReproceso HAVING COUNT(*) > 1
 
 --DELETE FROM Reprocesos.ReprocesoCC WHERE IdTipoReproceso <> 31389
+--TIPO CLASIFICADOR 101
+--DETALLE CLASIFICADOR 31389 RM 266
 
 SELECT TOP 100 r.IdTipoReproceso
               ,r.FechaSolicitud

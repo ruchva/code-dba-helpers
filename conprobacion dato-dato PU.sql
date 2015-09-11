@@ -29,7 +29,7 @@ FROM (  SELECT b.NUP,b.IdTramite,b.IdGrupoBeneficio,b.NumeroCertificado,b.Docume
 		FROM Piv_CERTIF_PMM_PU a
 		WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL AND a.EstadoM IS NOT NULL
 	) AS DERECHA
--------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
 --DOCUNENTOCOMPARATIVO
 --ORIGEN
 SELECT pdc.IdTramite,pdc.IdGrupoBeneficio,pdc.COMPONENTE AS Componente, pdc.NUP, pdc.MONTO_CC AS MontoCC,pdc.MONTO_PMM AS MontoPMM,pdc.APORTES_AFP AS AportesAFP,pdc.NRO_DOCUMENTO AS NumeroDocumento,
@@ -65,8 +65,8 @@ FROM (  SELECT * FROM PagoU.DocumentoComparativo dc
 		FROM Piv_DOC_COMPARATIVO pdc
 		WHERE pdc.NUP IS NOT NULL AND pdc.IdTramite IS NOT NULL
 	) AS DERECHA
--------------------------------------------------------------
---PREBENEFICIARIOS
+-----------------------------------------------------------------------------------------------------------------------------------------------
+--PREBENEFICIARIOS ---***SE REALIZARA CUANDO SE TENGA NUPDH COMPLETO Y CORREGIDO
 --ORIGEN
 /*SELECT ppb.NUP AS NUPTitular,ppb.NUPDH,ppb.FORMULARIO AS Formulario,ppb.IdTramite,ppb.IdGrupoBeneficio,ppb.CLASE_BENEFICIO AS ClaseBeneficio,ppb.PORCENTAJE AS Porcentaje,ppb.RED_DH AS RedDH,
 ppb.PARENTESCO AS Parentesco,ppb.Estado,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC) AS Version,1 AS RegistroActivo,NULL AS Resolucion,NULL AS FechaResolucion
@@ -92,7 +92,7 @@ FROM (  SELECT * FROM PagoU.PreBeneficiarios pb
 		FROM Piv_PreBeneficiarios ppb
 		WHERE ppb.NUP IS NOT NULL AND ppb.IdTramite IS NOT NULL
 	) AS DERECHA*/
--------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
 --PRETITULARES
 --ORIGEN
 SELECT ppt.NUP,ppt.FORMULARIO AS Formulario,ppt.IdTramite,ppt.IdGrupoBeneficio,ppt.NUM_CERTIF AS NumeroCertificado,ppt.IdBeneficio,ppt.ANIOS_INSALUBRES AS AniosInsalubres,ppt.MONTO_BASE AS MontoBase,
@@ -122,7 +122,7 @@ FROM (  SELECT * FROM PagoU.PreTitulares pt
 		FROM Piv_PreTitulares ppt
 		WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
 	) AS DERECHA
--------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
 --CHEQUEPU
 --ORIGEN
 SELECT pcp.EstadoM,pcp.NUPTitular,pcp.NUPDH,pcp.COD AS Codigo,pcp.ANIO AS Anio,pcp.MES AS Mes,pcp.DEBE AS Debe,pcp.HABER AS Haber,pcp.NRO_CHEQUE AS NumeroCheque,pcp.NRO_BAN AS NumeroBanco,pcp.IdBanco,
@@ -151,7 +151,7 @@ FROM (  SELECT * FROM PagoU.PreTitulares pt
 		FROM Piv_PreTitulares ppt
 		WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
 	) AS DERECHA
--------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
 --TITULARPU
 --ORIGEN
 SELECT ptp.NUP,ptp.IdTramite,ptp.IdGrupoBeneficio,ptp.NUM_CERTIF AS NumeroCertificado,ptp.FORMULARIO AS Formulario,ptp.ANIOS_INSALUBRES AS AniosInsalubres,ptp.FECHA_ALTA AS FechaAlta,ptp.RESOLUCION AS Resolucion,
@@ -178,7 +178,7 @@ FROM (  SELECT * FROM PagoU.TitularPU tp
 		FROM Piv_TitularPU ptp
 		WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL
 	) AS DERECHA
-
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 

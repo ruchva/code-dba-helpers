@@ -15,7 +15,7 @@ BEGIN
 				WHEN TIPO_REP='N' THEN '31502'
 		   END	--IdTipoReproceso
 		  ,IdTipoBeneficio---IdTipoBeneficio
-		  ,NULL	---NFormTipoRepro
+		  ,NULL	---NFormTipoRepro ---***EXISTE EN LA NUEVA ESTRUCTURA?
 		  ,NUM_RA---NumeroResolucion
 		  ,FECHA_RA---FechaResolucion
 		  ,FECHA--FechaInicioRepro
@@ -24,14 +24,14 @@ BEGIN
 		  ,IdGrupoBeneficio--IdGrupoBeneficio
 		  ,NoFormularioCalculo--NoFormularioCalculo
 		  ,IdTipoFormularioCalculo--IdTipoFormularioCalculoId
-		  ,NULL--EstadoFormCalcCC---****
-		  ,NULL--VerSalarioCotizable --ULTIM. VERSION SE SALARIO COTIZABLE
-		  ,FECHA_CALCULO--FechaCalculo --FORM. FECHA CALCULO
-		  ,MontoCC --MontoCC--
-		  ,NULL--MontoCCNuevo--*
-		  ,NULL--SIP_impresion--****
-		  ,NULL--SIP_impresionNuevo--*
-		  ,NO_CERTIF--NroCertificado
+		  ,NULL--EstadoFormCalcCC ---***COMPLETAR DESPUES DE MIGRAR *CompletaReprocesos
+		  ,NULL--VerSalarioCotizable 
+		  ,FECHA_CALCULO--FechaCalculo 
+		  ,MontoCC --MontoCC ---***COMPLETAR DESPUES DE MIGRAR *CompletaReprocesos
+		  ,NULL--MontoCCNuevo 
+		  ,NULL--SIP_impresion ---***COMPLETAR DESPUES DE MIGRAR *CompletaReprocesos
+		  ,NULL--SIP_impresionNuevo 
+		  ,NO_CERTIF--NroCertificado ---***VERIFICAR CORRESPONDENCIA CON CertificadoCC
 		  ,IdTipoTramite--IdTipoTramite
 		  ,NULL--IdTipoCC
 		  ,NULL--RegistroAPS
@@ -57,7 +57,7 @@ BEGIN
 		  ,MONTO_CC_II--MontoActualizadoCCII
 		  ,MONTO_PU_II--MontoActualizadoPUII
 		  ,1--IdEstadoReproceso
-		  ,GETDATE()--FechaCambioEstado--*CONSULTAR ORIGEN*
+		  ,GETDATE()--FechaCambioEstado ---***CONSULTAR ORIGEN DE ESTE CAMPO
 		  ,1--RegistroActivo
 		  ,(SELECT IdUsuario
 			FROM   Seguridad.Usuario
