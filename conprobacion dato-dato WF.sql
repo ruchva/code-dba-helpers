@@ -1,22 +1,23 @@
 --Flujo solo destino
-SELECT * FROM Workflow.Flujo f where f.IdFlujo = 1409001 
+select * from Workflow.Flujo f where f.IdFlujo = 1409001 
 -------------------------------------------------------------------------------------------------
 --FlujoNodo
 --ORIGEN
-SELECT ma.DescripcionActividad AS Descripcion,ma.IdArea,ma.IdOficina FROM M_ACTIVIDADFLUJO ma
+select 1409001 as IdFlujo, a.IdActividad as IdNodo,a.DescripcionActividad as Descripcion,a.IdOficina,a.IdArea from M_ACTIVIDADFLUJO a 
+select f.IdFlujo,f.IdNodo,f.Descripcion,f.IdOficina,f.IdArea from Workflow.FlujoNodo f where IdArea is not null and IdFlujo = 1409001 
 --DESTINO
 SELECT fn.Descripcion,fn.IdArea,fn.IdOficina FROM Workflow.FlujoNodo fn
 
 SELECT 'Pivote' AS Origen,*
-FROM (  SELECT ma.DescripcionActividad AS Descripcion,ma.IdArea,ma.IdOficina,ma.IdActividad FROM M_ACTIVIDADFLUJO ma
+FROM (  select 1409001 as IdFlujo, a.IdActividad as IdNodo,a.DescripcionActividad as Descripcion,a.IdOficina,a.IdArea from M_ACTIVIDADFLUJO a
 		EXCEPT
-		SELECT fn.Descripcion,fn.IdArea,fn.IdOficina,fn.IdNodo FROM Workflow.FlujoNodo fn
+		select f.IdFlujo,f.IdNodo,f.Descripcion,f.IdOficina,f.IdArea from Workflow.FlujoNodo f where IdArea is not null and IdFlujo = 1409001
 	) AS IZQUIERDA
 UNION 
 SELECT 'Destino' AS Origen,*
-FROM (  SELECT fn.Descripcion,fn.IdArea,fn.IdOficina FROM Workflow.FlujoNodo fn	
+FROM (  select f.IdFlujo,f.IdNodo,f.Descripcion,f.IdOficina,f.IdArea from Workflow.FlujoNodo f where IdArea is not null and IdFlujo = 1409001	
 		EXCEPT
-		SELECT ma.DescripcionActividad AS Descripcion,ma.IdArea,ma.IdOficina FROM M_ACTIVIDADFLUJO ma
+		select 1409001 as IdFlujo, a.IdActividad as IdNodo,a.DescripcionActividad as Descripcion,a.IdOficina,a.IdArea from M_ACTIVIDADFLUJO a
 	) AS DERECHA
 
 --CASO DEL EJEMPLO ANTERIOR
@@ -29,13 +30,13 @@ WHERE fn.Descripcion = 'PRA' and fn.IdArea = 20604
 -------------------------------------------------------------------------------------------------
 --FlujoNodoPredecesor
 --origen
-select IdFlujo,IdNodo from Workflow.FlujoNodo f where f.IdFlujo = 1409001
+select IdFlujo,IdNodo from Workflow.FlujoNodo f where IdArea is not null and f.IdFlujo = 1409001
 --destino
 select IdFlujo,IdNodo from Workflow.FlujoNodoPredecesor f where f.IdFlujo = 1409001
 --n*n - n registros
 
 SELECT 'Pivote' AS Origen,*
-FROM (  select IdFlujo,IdNodo from Workflow.FlujoNodo f where f.IdFlujo = 1409001
+FROM (  select IdFlujo,IdNodo from Workflow.FlujoNodo f where IdArea is not null and f.IdFlujo = 1409001
 		EXCEPT
 		select IdFlujo,IdNodo from Workflow.FlujoNodoPredecesor f where f.IdFlujo = 1409001
 	) AS IZQUIERDA
@@ -43,7 +44,7 @@ UNION
 SELECT 'Destino' AS Origen,*
 FROM (  select IdFlujo,IdNodo from Workflow.FlujoNodoPredecesor f where f.IdFlujo = 1409001
 		EXCEPT
-		select IdFlujo,IdNodo from Workflow.FlujoNodo f where f.IdFlujo = 1409001
+		select IdFlujo,IdNodo from Workflow.FlujoNodo f where IdArea is not null and f.IdFlujo = 1409001
 	) AS DERECHA
 -------------------------------------------------------------------------------------------------
 --Concepto
@@ -54,12 +55,14 @@ select * from Workflow.TipoTramiteConcepto c where c.IdConcepto in ('FLUJO_INI',
 -------------------------------------------------------------------------------------------------
 --SolicitudTramite
 --origen
-select titular as Descripcion,Usuario as IdUsuario,fechareg as FechaHoraRegistro,fechareg as FechaHoraInicio,Usuario as IdUsuarioInicio from M_TRAMITES_ESTADOIN m where m.TipoTram = 'CC_CADQ' and m.flag not in (1,5,6)
+select titular as Descripcion,Usuario as IdUsuario,fechareg as FechaHoraRegistro,fechareg as FechaHoraInicio,Usuario as IdUsuarioInicio 
+from M_TRAMITES_ESTADOIN m where m.TipoTram = 'CC_CADQ' and m.flag not in (1,5,6)
 --destino
 select Descripcion,IdUsuario,FechaHoraRegistro,FechaHoraInicio,IdUsuarioInicio from Workflow.SolicitudTramite
 
 SELECT 'Pivote' AS Origen,*
-FROM (  select titular as Descripcion,Usuario as IdUsuario,fechareg as FechaHoraRegistro,fechareg as FechaHoraInicio,Usuario as IdUsuarioInicio from M_TRAMITES_ESTADOIN m where m.TipoTram = 'CC_CADQ' and m.flag not in (1,5,6)
+FROM (  select titular as Descripcion,Usuario as IdUsuario,fechareg as FechaHoraRegistro,fechareg as FechaHoraInicio,Usuario as IdUsuarioInicio 
+        from M_TRAMITES_ESTADOIN m where m.TipoTram = 'CC_CADQ' and m.flag not in (1,5,6)
 		EXCEPT
 		select Descripcion,IdUsuario,FechaHoraRegistro,FechaHoraInicio,IdUsuarioInicio from Workflow.SolicitudTramite
 	) AS IZQUIERDA
@@ -67,7 +70,8 @@ UNION
 SELECT 'Destino' AS Origen,*
 FROM (  select Descripcion,IdUsuario,FechaHoraRegistro,FechaHoraInicio,IdUsuarioInicio from Workflow.SolicitudTramite
 		EXCEPT
-		select titular as Descripcion,Usuario as IdUsuario,fechareg as FechaHoraRegistro,fechareg as FechaHoraInicio,Usuario as IdUsuarioInicio from M_TRAMITES_ESTADOIN m where m.TipoTram = 'CC_CADQ' and m.flag not in (1,5,6)
+		select titular as Descripcion,Usuario as IdUsuario,fechareg as FechaHoraRegistro,fechareg as FechaHoraInicio,Usuario as IdUsuarioInicio 
+		from M_TRAMITES_ESTADOIN m where m.TipoTram = 'CC_CADQ' and m.flag not in (1,5,6)
 	) AS DERECHA
 -------------------------------------------------------------------------------------------------
 --SolicitudTramiteConcepto
@@ -93,10 +97,10 @@ FROM (  select FechaHrInicio,IdOficina,IdUsuario from Workflow.Instancia
 -------------------------------------------------------------------------------------------------
 --InstanciaNodo
 --origen
-select INSTANCIA.IdInstancia,INSTANCIA.IdTipoTramite,INSTANCIA.IdSolicitud,INSTANCIA.IdFlujo,MTF.IdActividad as IdNodo,MTF.FechaIngreso as FechaHrInicio,MTF.FechaSalida as FechaHrFin,MTF.IdArea,MTF.Usuario as IdUsuario from M_TRAMITES_ESTADOIN MTEI
-		join M_TRAMITESFLUJO MTF on MTEI.Tramite = MTF.TramiteCrenta
-		join (select IdSolicitud, ValorChar from Workflow.SolicitudTramiteConcepto where IdConcepto = 'ID_TRAMITE_MIG') STCPTO on STCPTO.ValorChar = MTEI.Tramite
-		join Workflow.Instancia INSTANCIA on INSTANCIA.IdSolicitud = STCPTO.IdSolicitud 
+select INSTANCIA.IdInstancia,INSTANCIA.IdTipoTramite,INSTANCIA.IdSolicitud,INSTANCIA.IdFlujo,MTF.IdActividad as IdNodo,MTF.FechaIngreso as FechaHrInicio,MTF.FechaSalida as FechaHrFin,MTF.IdArea,MTF.Usuario as IdUsuario 
+from M_TRAMITES_ESTADOIN MTEI join M_TRAMITESFLUJO MTF on MTEI.Tramite = MTF.TramiteCrenta
+							  join (select IdSolicitud, ValorChar from Workflow.SolicitudTramiteConcepto where IdConcepto = 'ID_TRAMITE_MIG') STCPTO on STCPTO.ValorChar = MTEI.Tramite
+							  join Workflow.Instancia INSTANCIA on INSTANCIA.IdSolicitud = STCPTO.IdSolicitud 
 --destino	
 select i.IdInstancia,i.IdTipoTramite,i.IdSolicitud,i.IdFlujo,i.IdNodo,i.FechaHrInicio,i.FechaHrFin,i.IdArea,i.IdUsuario from Workflow.InstanciaNodo i
 
@@ -124,6 +128,7 @@ select * from Seguridad.OficinaArea
 -------------------------------------------------------------------------------------------------
 --Rol
 select * from Seguridad.Rol r where r.Descripcion like '%Migrador%' 
+
 -------------------------------------------------------------------------------------------------
 
 
