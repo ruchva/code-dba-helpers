@@ -27,7 +27,7 @@ BEGIN
 		  ,NULL--EstadoFormCalcCC ---***COMPLETAR DESPUES DE MIGRAR *CompletaReprocesos
 		  ,NULL--VerSalarioCotizable 
 		  ,FECHA_CALCULO--FechaCalculo 
-		  ,MontoCC --MontoCC ---***COMPLETAR DESPUES DE MIGRAR *CompletaReprocesos
+		  ,MontoCC --MontoCC
 		  ,NULL--MontoCCNuevo 
 		  ,NULL--SIP_impresion ---***COMPLETAR DESPUES DE MIGRAR *CompletaReprocesos
 		  ,NULL--SIP_impresionNuevo 

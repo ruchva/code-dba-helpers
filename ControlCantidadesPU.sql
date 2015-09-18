@@ -12,13 +12,13 @@ BEGIN
 	SELECT @MIG_2 = COUNT(*) FROM Piv_DOC_COMPARATIVO pdc
 	PRINT 'DocumentoComparativo REGISTROS MIGRADOS:  '+ CAST(@cDocumentoComparativo AS CHAR(5)) +'| ORIGEN:  '+ CAST(@MIG_2 AS CHAR(5))+'| OBSERVADOS:  '+CAST(@MIG_2 - @cDocumentoComparativo AS CHAR(5))
 	PRINT '---------------------------------------------------------------------------------'
-	
+	/*
 	DECLARE @cPreBeneficiarios INT, @MIG_3 INT 
 	SELECT @cPreBeneficiarios = COUNT(*) FROM PagoU.PreBeneficiarios
 	SELECT @MIG_3 = COUNT(*) FROM Piv_PreBeneficiarios ppb
 	PRINT 'PreBeneficiarios     REGISTROS MIGRADOS:  '+ CAST(@cPreBeneficiarios AS CHAR(5)) +'| ORIGEN:  '+ CAST(@MIG_3 AS CHAR(5))+'| OBSERVADOS:  '+CAST(@MIG_3 - @cPreBeneficiarios AS CHAR(5)) 
 	PRINT '---------------------------------------------------------------------------------'
-	
+	*/
 	DECLARE @cPreTitulares INT, @MIG_4 INT
 	SELECT @cPreTitulares = COUNT(*) FROM PagoU.PreTitulares
 	SELECT @MIG_4 = COUNT(*) FROM Piv_PreTitulares ppt
