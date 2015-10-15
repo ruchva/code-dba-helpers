@@ -59,8 +59,12 @@ select case when TIPO_IDENTIF = 1 then 25
 	  ,812'IdUsuarioRegistro'
 from Piv_PreBeneficiarios
 
-
-select * from Persona.Persona where IdUsuarioRegistro = 812 and CUA = 0
-order by FechaRegistroPersona desc
+/*
+ejecutar ñuego de correrlo
+	UPDATE a SET NUPDH = p.NUP
+	FROM dbo.Piv_PreBeneficiarios a
+	JOIN Persona.Persona p ON p.Matricula = a.DH_MATRICULA
+	where a.NUP is not null and a.NUPDH is null
+*/	
 
 

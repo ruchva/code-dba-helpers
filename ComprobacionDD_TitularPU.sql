@@ -2,34 +2,40 @@ create procedure ComprobacionDD_TitularPU as
 begin
 
 	SELECT 'Pivote' AS Origen,*
-	FROM (  SELECT ptp.NUP,ptp.IdTramite
+	FROM (  SELECT ptp.Estado
+	              ,ptp.NUP
+	              ,ptp.IdTramite
 	              ,ptp.IdGrupoBeneficio
 				  ,ptp.NUM_CERTIF'NumeroCertificado'
 				  ,ptp.FORMULARIO'Formulario'
 				  ,ptp.ANIOS_INSALUBRES'AniosInsalubres'
 				  ,ptp.FECHA_ALTA'FechaAlta'
-				  ,ptp.RESOLUCION'Resolucion'
-				  ,ptp.Estado
-				  ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version'
+				  ,ptp.RESOLUCION'Resolucion'				  
 				  ,1'RegistroActivo'
 			FROM Piv_TitularPU ptp
 			WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL
 			EXCEPT
-			SELECT * FROM PagoU.TitularPU tp
+			SELECT tp.Estado, tp.NUP, tp.IdTramite, tp.IdGrupoBeneficio,
+			       tp.NumeroCertificado, tp.Formulario, tp.AniosInsalubres,
+			       tp.FechaAlta, tp.Resolucion, tp.RegistroActivo
+			  FROM PagoU.TitularPU tp
 		) AS IZQUIERDA
 	UNION 
 	SELECT 'Destino' AS Origen,*
-	FROM (  SELECT * FROM PagoU.TitularPU tp	
+	FROM (  SELECT tp.Estado, tp.NUP, tp.IdTramite, tp.IdGrupoBeneficio,
+			       tp.NumeroCertificado, tp.Formulario, tp.AniosInsalubres,
+			       tp.FechaAlta, tp.Resolucion, tp.RegistroActivo
+			  FROM PagoU.TitularPU tp
 			EXCEPT
-			SELECT ptp.NUP,ptp.IdTramite
+			SELECT ptp.Estado
+	              ,ptp.NUP
+	              ,ptp.IdTramite
 	              ,ptp.IdGrupoBeneficio
 				  ,ptp.NUM_CERTIF'NumeroCertificado'
 				  ,ptp.FORMULARIO'Formulario'
 				  ,ptp.ANIOS_INSALUBRES'AniosInsalubres'
 				  ,ptp.FECHA_ALTA'FechaAlta'
-				  ,ptp.RESOLUCION'Resolucion'
-				  ,ptp.Estado
-				  ,ROW_NUMBER() OVER(PARTITION BY NUP ORDER BY IdTramite ASC)'Version'
+				  ,ptp.RESOLUCION'Resolucion'				  
 				  ,1'RegistroActivo'
 			FROM Piv_TitularPU ptp
 			WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL

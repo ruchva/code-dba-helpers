@@ -102,6 +102,7 @@ BEGIN
 	  AND ppb.IdGrupoBeneficio IS NOT NULL
 	  and ppb.NUP in (select NUP from Persona.Persona)
 	  and ppb.NUPDH in (select NUP from Persona.Persona)
+	  and ppb.NUPDH not in (select NUPDH from PagoU.PreBeneficiarios)
 	  
 	DECLARE @cPreBeneficiarios INT 
 	SELECT @cPreBeneficiarios = COUNT(*) FROM PagoU.PreBeneficiarios

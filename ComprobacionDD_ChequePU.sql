@@ -16,16 +16,21 @@ begin
 				  ,pcp.FECHA_EMI'FechaEmision'
 				  ,pcp.C31
 				  ,NULL'Conciliado'
-				  ,ROW_NUMBER() OVER(PARTITION BY NUPTitular ORDER BY T_MATRICULA ASC)'Version'
 				  ,1'RegistroActivo'
 			FROM Piv_ChequePU pcp
 			WHERE pcp.NUPTitular IS NOT NULL
 			EXCEPT
-			SELECT * FROM PagoU.ChequePU cp
+			SELECT cp.Estado, cp.NUPTitular, cp.NUPDH, cp.Codigo, cp.Anio, cp.Mes,
+	               cp.Debe, cp.Haber, cp.NumeroCheque, cp.NumeroBanco, cp.IdBanco,
+	               cp.FechaEmision, cp.C31, cp.Conciliado, cp.RegistroActivo
+	          FROM PagoU.ChequePU cp
 		) AS IZQUIERDA
 	UNION 
 	SELECT 'Destino' AS Origen,*
-	FROM (  SELECT * FROM PagoU.ChequePU cp
+	FROM (  SELECT cp.Estado, cp.NUPTitular, cp.NUPDH, cp.Codigo, cp.Anio, cp.Mes,
+	               cp.Debe, cp.Haber, cp.NumeroCheque, cp.NumeroBanco, cp.IdBanco,
+	               cp.FechaEmision, cp.C31, cp.Conciliado, cp.RegistroActivo
+	          FROM PagoU.ChequePU cp
 			EXCEPT
 			SELECT pcp.EstadoM
 	              ,pcp.NUPTitular
@@ -41,7 +46,6 @@ begin
 				  ,pcp.FECHA_EMI'FechaEmision'
 				  ,pcp.C31
 				  ,NULL'Conciliado'
-				  ,ROW_NUMBER() OVER(PARTITION BY NUPTitular ORDER BY T_MATRICULA ASC)'Version'
 				  ,1'RegistroActivo'
 			FROM Piv_ChequePU pcp
 			WHERE pcp.NUPTitular IS NOT NULL

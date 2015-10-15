@@ -1,7 +1,7 @@
 /*--adicionar dos tipos de reprocesos
 select * from Clasificador.DetalleClasificador order by IdDetalleClasificador desc
-INSERT INTO [Clasificador].[DetalleClasificador] ([IdDetalleClasificador], [IdTipoClasificador], [CodigoDetalleClasificador], [DescripcionDetalleClasificador], [ObservacionClasificador], [IdPadre], [IdEstadoDetalleClasificador], [RegistroActivo]) VALUES ('31513', '101', 'Y', 'D.S. 29194', 'NINGUNA', '0', '31', '1');
-INSERT INTO [Clasificador].[DetalleClasificador] ([IdDetalleClasificador], [IdTipoClasificador], [CodigoDetalleClasificador], [DescripcionDetalleClasificador], [ObservacionClasificador], [IdPadre], [IdEstadoDetalleClasificador], [RegistroActivo]) VALUES ('31514', '101', 'N', 'NULL?', 'NINGUNA', '0', '31', '1');
+INSERT INTO [Clasificador].[DetalleClasificador] ([IdDetalleClasificador], [IdTipoClasificador], [CodigoDetalleClasificador], [DescripcionDetalleClasificador], [ObservacionClasificador], [IdPadre], [IdEstadoDetalleClasificador], [RegistroActivo]) VALUES ('31528', '101', 'Y', 'D.S. 29194', 'NINGUNA', '0', '31', '1');
+INSERT INTO [Clasificador].[DetalleClasificador] ([IdDetalleClasificador], [IdTipoClasificador], [CodigoDetalleClasificador], [DescripcionDetalleClasificador], [ObservacionClasificador], [IdPadre], [IdEstadoDetalleClasificador], [RegistroActivo]) VALUES ('31529', '101', 'N', 'NULL?', 'NINGUNA', '0', '31', '1');
 
 --si no se migro 266
 DROP TABLE SENASIR.dbo.Piv_REPROCESO_CC_rows

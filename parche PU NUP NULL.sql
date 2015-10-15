@@ -13,7 +13,7 @@ FROM Persona.Persona p
 JOIN dbo.Piv_CERTIF_PMM_PU a 
 ON dbo.fn_CharLTrim('0',dbo.eliminaespacios(dbo.eliminaLetras(dbo.eliminapuntos(a.CI)))) = p.NumeroDocumento
 WHERE a.NUP IS NULL
-	AND p.NUP NOT IN ('28929','30732','46272','83403','85457','100505','206533')--no son las mismas personas
+  AND p.NUP NOT IN ('28929','30732','46272','83403','85457','100505','206533')--no son las mismas personas
 
 --matricula, nombre comprobados
 SELECT p.NUP,p.CUA,p.Matricula,a.Matricula,p.NumeroDocumento,a.CI,p.PrimerApellido,p.SegundoApellido,p.PrimerNombre,a.Paterno,a.Materno,a.Nombres

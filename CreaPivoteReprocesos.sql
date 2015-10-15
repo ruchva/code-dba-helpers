@@ -55,9 +55,13 @@ BEGIN
 	
 	--NroFormularioRepro		
 	DROP TABLE dbo.Piv_REPROCESO_CC_rows
-	SELECT (SELECT MAX(NroFormularioRepro) FROM Reprocesos.ReprocesoCC) + ROW_NUMBER() OVER (ORDER BY TRAMITE DESC) AS rownumber, *
+	--SELECT (SELECT MAX(NroFormularioRepro) FROM Reprocesos.ReprocesoCC) + ROW_NUMBER() OVER (ORDER BY TRAMITE DESC) AS rownumber, *
+	--NO se migro 266
+	SELECT 0 + ROW_NUMBER() OVER (ORDER BY TRAMITE DESC) AS rownumber, *
 	INTO dbo.Piv_REPROCESO_CC_rows
 	FROM dbo.Piv_REPROCESO_CC
+
+	
 END
 
 
