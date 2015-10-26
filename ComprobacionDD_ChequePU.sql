@@ -2,6 +2,7 @@ create procedure ComprobacionDD_ChequePU as
 begin
 
 	SELECT 'Pivote' AS Origen,*
+	INTO #temp_cheque_pu_QC
 	FROM (  SELECT pcp.EstadoM
 	              ,pcp.NUPTitular
 				  ,pcp.NUPDH
@@ -50,5 +51,16 @@ begin
 			FROM Piv_ChequePU pcp
 			WHERE pcp.NUPTitular IS NOT NULL
 		) AS DERECHA
-
+	
+	IF (SELECT COUNT(*) FROM #temp_cheque_pu_QC) = 0
+	BEGIN
+		PRINT 'TABLAS: ChequePU - chePU'
+		PRINT 'NO EXISTEN INCONSISTENCIAS EN LOS DATOS ORIGEN Y DESTINO' 
+		PRINT '--------------------------------------------------------'
+		DROP TABLE #temp_cheque_pu_QC
+	END			
+	ELSE
+	BEGIN
+	    SELECT * FROM #temp_cheque_pu_QC
+	END 
 end

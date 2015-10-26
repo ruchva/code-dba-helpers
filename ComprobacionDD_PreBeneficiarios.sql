@@ -2,6 +2,7 @@ create procedure ComprobacionDD_PreBeneficiarios as
 BEGIN
 	
 	SELECT 'Pivote' AS Origen,*
+	INTO #temp_pre_beneficiarios_QC
 	FROM (  SELECT 
 	               ptp.NUP'NUPTitular'
 	              ,ptp.NUPDH
@@ -44,5 +45,18 @@ BEGIN
 			FROM Piv_PreBeneficiarios ptp
 			WHERE ptp.NUP IS NOT NULL AND ptp.IdTramite IS NOT NULL
 		) AS DERECHA
-
+	
+	IF (SELECT COUNT(*) FROM #temp_pre_beneficiarios_QC) = 0
+	BEGIN
+		PRINT 'TABLAS: PreBeneficiarios - Pre_Beneficiarios'
+		PRINT 'NO EXISTEN INCONSISTENCIAS EN LOS DATOS ORIGEN Y DESTINO' 
+		PRINT '--------------------------------------------------------'
+		DROP TABLE #temp_pre_beneficiarios_QC
+	END			
+	ELSE
+	BEGIN
+	    SELECT * FROM #temp_pre_beneficiarios_QC
+	END 
+	
+	
 end

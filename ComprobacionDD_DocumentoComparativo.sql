@@ -2,6 +2,7 @@ create procedure ComprobacionDD_DocumentoComparativo as
 begin
 
 		SELECT 'Pivote' AS Origen,*
+		INTO #temp_documento_comparativo_QC
 		FROM (  SELECT pdc.IdTramite
 					  ,pdc.IdGrupoBeneficio
 					  ,pdc.COMPONENTE'Componente'
@@ -91,4 +92,17 @@ begin
 				WHERE pdc.NUP IS NOT NULL AND pdc.IdTramite IS NOT NULL and pdc.EstadoM is not null
 			) AS DERECHA
 
+	IF (SELECT COUNT(*) FROM #temp_documento_comparativo_QC) = 0
+	BEGIN
+		PRINT 'TABLAS: DocumentoComparativo - DOC_COMPARATIVO'
+		PRINT 'NO EXISTEN INCONSISTENCIAS EN LOS DATOS ORIGEN Y DESTINO' 
+		PRINT '--------------------------------------------------------'
+		DROP TABLE #temp_documento_comparativo_QC
+	END			
+	ELSE
+	BEGIN
+	    SELECT * FROM #temp_documento_comparativo_QC
+	END 	
+			
+			
 end

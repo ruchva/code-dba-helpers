@@ -2,7 +2,8 @@ create procedure ComprobacionDD_CertificadoPMMPU as
 begin
 
 	SELECT 'Pivote' AS Origen,*
-	FROM (  SELECT a.NUP
+	INTO #temp_certificacion_pmmpu_QC
+    FROM (  SELECT a.NUP
 	              ,a.IdTramite
 				  ,a.IdGrupoBeneficio
 				  ,a.no_certif'NumeroCertificado'
@@ -40,6 +41,17 @@ begin
 			FROM Piv_CERTIF_PMM_PU a
 			WHERE a.NUP IS NOT NULL AND a.IdTramite IS NOT NULL AND a.EstadoM IS NOT NULL
 		) AS DERECHA
-
+		
+	IF (SELECT COUNT(*) FROM #temp_certificacion_pmmpu_QC) = 0
+	BEGIN
+		PRINT 'TABLAS: CertificadoPMMPU - CERTIF_PMM_PU'
+		PRINT 'NO EXISTEN INCONSISTENCIAS EN LOS DATOS ORIGEN Y DESTINO' 
+		PRINT '--------------------------------------------------------'
+		DROP TABLE #temp_certificacion_pmmpu_QC
+	END			
+	ELSE
+	BEGIN
+	    SELECT * FROM #temp_certificacion_pmmpu_QC
+	END 
 
 end

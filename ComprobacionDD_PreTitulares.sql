@@ -2,6 +2,7 @@ create procedure ComprobacionDD_PreTitulares as
 begin
 
 	SELECT 'Pivote' AS Origen,*
+	INTO #temp_pre_titulares_QC
 	FROM (  SELECT ppt.NUP
 	              ,ppt.FORMULARIO'Formulario'
 				  ,ppt.IdTramite
@@ -60,5 +61,17 @@ begin
 			FROM Piv_PreTitulares ppt
 			WHERE ppt.NUP IS NOT NULL AND ppt.IdTramite IS NOT NULL
 		) AS DERECHA
+		
+	IF (SELECT COUNT(*) FROM #temp_pre_titulares_QC) = 0
+	BEGIN
+		PRINT 'TABLAS: PreTitulares - Pre_Titulares'
+		PRINT 'NO EXISTEN INCONSISTENCIAS EN LOS DATOS ORIGEN Y DESTINO' 
+		PRINT '--------------------------------------------------------'
+		DROP TABLE #temp_pre_titulares_QC
+	END			
+	ELSE
+	BEGIN
+	    SELECT * FROM #temp_pre_titulares_QC
+	END 	
 
 end

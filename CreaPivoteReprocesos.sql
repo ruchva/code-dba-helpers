@@ -11,10 +11,14 @@ BEGIN
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD IdTramite INT
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD IdGrupoBeneficio INT 
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD IdTipoTramite INT 
+	ALTER TABLE dbo.Piv_REPROCESO_CC ADD IdTipoReproceso INT 
+	ALTER TABLE dbo.Piv_REPROCESO_CC ADD IdEstadoReproceso INT 
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD NoFormularioCalculo INT
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD IdTipoFormularioCalculo INT
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD EstadoFormCalcCC INT
-	ALTER TABLE dbo.Piv_REPROCESO_CC ADD MontoCC DECIMAL 
+	ALTER TABLE dbo.Piv_REPROCESO_CC ADD MontoCCAceptado DECIMAL 
+	ALTER TABLE dbo.Piv_REPROCESO_CC ADD DensidadTotal DECIMAL 
+	ALTER TABLE dbo.Piv_REPROCESO_CC ADD SalarioCotizableActualizadoTotal DECIMAL 
 	ALTER TABLE dbo.Piv_REPROCESO_CC ADD SIP_impresion INT 
 	
 	--NUP
@@ -27,15 +31,13 @@ BEGIN
 	FROM dbo.Piv_REPROCESO_CC a JOIN CertificacionCC.FormularioCalculoCC fcc 
 	ON fcc.IdTramite = dbo.eliminaLetras(a.TRAMITE)
 	
-	--UPDATE EstadoFormCalcCC
-	
-	--MontoCC
-	UPDATE a SET MontoCC = fcc.MontoCC
+	--MontoCCAceptado
+	UPDATE a SET MontoCCAceptado = fcc.MontoCC
+	            ,SalarioCotizableActualizadoTotal = fcc.SalarioCotizableActualizadoTotal
+				,DensidadTotal = fcc.DensidadTotal
 	FROM dbo.Piv_REPROCESO_CC a JOIN CertificacionCC.FormularioCalculoCC fcc 
 	ON fcc.IdTramite = dbo.eliminaLetras(a.TRAMITE)
-	
-	--UPDATE SIP_impresion
-	
+		
 	/*
 	--IdTipoBeneficio --apunta a BeneficioOtorgado asi deberia ser
 	UPDATE a SET a.IdTipoBeneficio = CASE WHEN a.BENEFICIO = 'PU' THEN 21
@@ -52,6 +54,29 @@ BEGIN
 										  WHEN a.BENEFICIO = 'PMM' THEN 31423
 									 END
 	FROM dbo.Piv_REPROCESO_CC a
+	
+	--IdTipoReproceso
+	UPDATE a SET a.IdTipoReproceso = CASE WHEN TIPO_REP = 'O' THEN 31388 
+										  WHEN TIPO_REP = 'C' THEN 31383
+										  WHEN TIPO_REP = 'E' THEN 31385
+										  WHEN TIPO_REP = 'X' THEN 31391
+										  WHEN TIPO_REP = 'D' THEN 31384
+										  WHEN TIPO_REP = 'L' THEN 31386
+										  WHEN TIPO_REP = 'U' THEN 31390
+										  WHEN TIPO_REP = 'M' THEN 31387
+										  WHEN TIPO_REP = 'Y' THEN 31513
+										  WHEN TIPO_REP = 'N' THEN 31514
+									 END
+	FROM dbo.Piv_REPROCESO_CC a
+	
+	--IdEstadoReproceso
+	UPDATE a SET a.IdEstadoReproceso = CASE WHEN a.ESTADO = 'K' THEN 50
+											WHEN a.ESTADO = 'A' THEN 42
+											WHEN a.ESTADO = 'R' THEN 1---*****completar
+											WHEN a.ESTADO = 'I' THEN 47
+										END
+	FROM CC.dbo.REPROCESO_CC a
+	
 	
 	--NroFormularioRepro		
 	DROP TABLE dbo.Piv_REPROCESO_CC_rows

@@ -57,7 +57,7 @@ BEGIN
 		  ,MONTO_CC_II--MontoActualizadoCCII
 		  ,MONTO_PU_II--MontoActualizadoPUII
 		  ,1--IdEstadoReproceso
-		  ,GETDATE()--FechaCambioEstado ---***CONSULTAR ORIGEN DE ESTE CAMPO
+		  ,FECHA--FechaCambioEstado 
 		  ,1--RegistroActivo
 		  ,(SELECT IdUsuario
 			FROM   Seguridad.Usuario

@@ -22,7 +22,9 @@ select case when TIPO_IDENTIF = 1 then 25
 	  ,0'CUA'--no tiene
 	  ,DH_MATRICULA
 	  ,null'NUB'--no tiene
-	  ,NUM_IDENTIF
+	  ,case when NUM_IDENTIF <> '0' then dbo.fn_CharLTrim('0',NUM_IDENTIF)
+	        when NUM_IDENTIF =  '0' then '9999999'
+       end'NumeroDocumento'
 	  ,null'ComplementoSEGIP'
 	  ,case when EXPEDIDO = '1' then 46
 			when EXPEDIDO = '2' then 43
@@ -40,8 +42,8 @@ select case when TIPO_IDENTIF = 1 then 25
 			when EXPEDIDO = '' then 31512
 			when EXPEDIDO is null then 31512
 	   end'IdDocumentoExpedido'   
-	  ,case when charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a')) > 0 then LEFT(replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'), charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'))) else replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a') end
-      ,case when charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a')) > 0 then RIGHT(replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'), len(replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a')) - charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'))) else '' end
+	  ,case when charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a')) > 0 then LEFT(replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'), charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'))) else replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a') end'PrimerNombre'
+      ,case when charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a')) > 0 then RIGHT(replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'), len(replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a')) - charindex(' ', replace(replace(replace(replace(replace(replace(replace(ltrim(rtrim(DH_NOMBRES)),'a','aa'),'x','ab'),'  ',' x'),'x ',''),'x',''),'ab','x'),'aa','a'))) else '' end'SegundoNombre'
       ,DH_PATERNO'PrimerApellido'
 	  ,DH_MATERNO'SegundoApellido'
 	  ,null'ApellidoCasada'  
@@ -60,7 +62,9 @@ select case when TIPO_IDENTIF = 1 then 25
 from Piv_PreBeneficiarios
 
 /*
-ejecutar ñuego de correrlo
+--luego de introducir las personas debemos actualziar los NUPDH en el pivote Piv_PreBeneficiarios
+--antes de vaciar a la tabla destino PreBeneficiarios ejecutando:
+	
 	UPDATE a SET NUPDH = p.NUP
 	FROM dbo.Piv_PreBeneficiarios a
 	JOIN Persona.Persona p ON p.Matricula = a.DH_MATRICULA
