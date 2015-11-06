@@ -5,7 +5,7 @@ FROM Persona.Persona p
 JOIN dbo.Piv_CERTIF_PMM_PU a ON a.Matricula = p.Matricula 
 	AND dbo.fn_CharLTrim('0',dbo.eliminaespacios(dbo.eliminaLetras(dbo.eliminapuntos(a.CI)))) = p.NumeroDocumento  
 WHERE dbo.eliminaespacios(p.PrimerApellido) = dbo.eliminaespacios(a.Paterno) 
-	AND dbo.eliminaespacios(p.SegundoApellido) = dbo.eliminaespacios(a.Materno)
+	AND dbo.eliminaespacios(p.SegundoApellido) = dbo.eliminaespacios(a.Materno) 
 
 --ci, nombre comprobados
 SELECT p.NUP,p.CUA,p.Matricula,a.Matricula,p.NumeroDocumento,a.CI,p.PrimerApellido,p.SegundoApellido,p.PrimerNombre,a.Paterno,a.Materno,a.Nombres

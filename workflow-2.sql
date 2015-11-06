@@ -26,11 +26,15 @@ select
 from dbo.M_TRAMITES_ESTADOIN MTEI
 where isnull(MTEI.flag, 0) not in (1, 6, 5) and TipoTram = 'CC_CADQ' 
 order by MTEI.TramiteTramP 
+
+--------
 SELECT * FROM Workflow.SolicitudTramite st
 SELECT * FROM M_TRAMITES_ESTADOIN mte WHERE ISNULL(mte.flag, 0) NOT IN (1, 6, 5) AND TipoTram = 'CC_CADQ'
+--ORIGEN
 SELECT a.* FROM   CRENTA..FUNC_TRAMITE a -- OBTIENE LA TABLA PIVOTE SOLO DE CC
 JOIN CRENTA..TRAMITE b ON  a.Matricula = b.Matricula AND a.Tramite = b.Tramite
 WHERE  b.ClaseRenta = 'U' --KFunTramiteCC 
+--------
 
 -- detalle de los tramites 
 -- en base a las 5 actividades creadas de TipoTramite = 'CC_CADQ'

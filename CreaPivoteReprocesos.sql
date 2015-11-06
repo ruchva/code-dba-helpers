@@ -71,11 +71,11 @@ BEGIN
 	
 	--IdEstadoReproceso
 	UPDATE a SET a.IdEstadoReproceso = CASE WHEN a.ESTADO = 'K' THEN 50
-											WHEN a.ESTADO = 'A' THEN 42
-											WHEN a.ESTADO = 'R' THEN 1---*****completar
-											WHEN a.ESTADO = 'I' THEN 47
+											WHEN a.ESTADO = 'A' THEN 47
+											WHEN a.ESTADO = 'R' THEN 49
+											WHEN a.ESTADO = 'I' THEN 1---verficar los tramites de este tipo
 										END
-	FROM CC.dbo.REPROCESO_CC a
+	FROM dbo.Piv_REPROCESO_CC a
 	
 	
 	--NroFormularioRepro		

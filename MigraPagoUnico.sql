@@ -196,3 +196,18 @@ BEGIN
 	PRINT 'CANTIDAD DE REGISTROS:  '+ CAST(@cTitularPU AS CHAR(5)) 
 	PRINT '------------------------------------------------------'
 END
+
+--select count(*) from PagoU.CertificadoPMMPU cp
+--select count(*) from dbo.Piv_CERTIF_PMM_PU
+--select count(*) from PagoU.DocumentoComparativo dc
+--select count(*) from dbo.Piv_DOC_COMPARATIVO
+--select count(*) from PagoU.PreBeneficiarios pb
+--select count(*) from dbo.Piv_PreBeneficiarios
+--select count(*) from PagoU.PreTitulares pt
+--select count(*) from dbo.Piv_PreTitulares
+--select count(*) from PagoU.TitularPU tp
+--select count(*) from dbo.Piv_TitularPU
+--select count(*) from PagoU.ChequePU cp
+--select count(*) from dbo.Piv_ChequePU
+
+
