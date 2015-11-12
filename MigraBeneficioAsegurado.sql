@@ -15,9 +15,10 @@ group by a.NUP having count(*) > 1
 order by a.NUP
 
 2°
-select * from Piv_DOC_COMPARATIVO a where a.NUP in (235034,236985)
-select * from Piv_CERTIF_PMM_PU b where   b.NUP in (235034,236985)
+select * from Piv_DOC_COMPARATIVO a where a.NUP in (163568,165537)
+select * from Piv_CERTIF_PMM_PU b where   b.NUP in (163568,165537)
 
+luego ejecutar el siguiente script completar mas abajo
 */
 insert Beneficio.BeneficioAsegurado (
 	 NUPAsegurado	,IdGrupoBeneficio	,IdBeneficioOtorgado	,IdCampoAplicacion	,FechaOtorgamiento	,PeridoInicioPago
@@ -58,10 +59,23 @@ where a.ESTADO = 'A' and b.Estado = 'I'
   and a.IdTramite is not null 
   and a.IdBeneficio is not null
   and a.NUP not in (select NUPAsegurado from Beneficio.BeneficioAsegurado)
-  --and a.NUP not in (161972,163915)--si existen repetidos
+  --and a.NUP not in (163568,165537)--si existen repetidos copiar del 2ª punto
 order by NUP
 
 
-----si existen repetidos (2°) se completa en eata parte
---insert into Beneficio.BeneficioAsegurado values (161972,3,21,0,'2006-11-20','200611',null,31424,'Tramite Migrado PU',null,106506,0,0,0)
---insert into Beneficio.BeneficioAsegurado values (163915,3,21,0,'2006-04-26','200604',null,31424,'Tramite Migrado PU',null,87461,0,0,0)	
+/*
+volver al punto 2ª y copiar los ultimos 2 select
+
+select * from Piv_DOC_COMPARATIVO a where a.NUP in (163568,165537)
+select * from Piv_CERTIF_PMM_PU b where   b.NUP in (163568,165537)
+
+
+         si existen repetidos (2°) se completa en eata parte
+         completar con datos de DOC_COMPARATIVO:(NUP    ,3 ,campo SELEC si es PU 21 si es PMM 19,0 ,FECHA_SELECCION (solo fecha) ,año+mes  ,null,EstadoM ,'Tramite Migrado PU' ,null ,IdTramite ,0,0,0)
+insert into Beneficio.BeneficioAsegurado values (165537 ,3 ,21                                  ,0 ,'2006-04-26'                 ,'200604' ,null,31424   ,'Tramite Migrado PU' ,null ,87464     ,0,0,0)
+insert into Beneficio.BeneficioAsegurado values (163568 ,3 ,21                                  ,0 ,'2006-11-20'                 ,'200611' ,null,31424   ,'Tramite Migrado PU' ,null ,106511    ,0,0,0)	
+
+
+
+
+*/
